@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChainQuant Core — Free Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg0:#07090f;--bg1:#0d1117;--bg2:#111a14;--bg3:#162019;--bg4:#1c2a1f;
+  --border:rgba(30,60,38,0.9);--border-hi:rgba(40,100,55,0.7);
+  --accent:#00c853;--accent2:#69f0ae;--accent3:#f7931a;--accent4:#b2ff59;
+  --green:#00c853;--danger:#ff4444;--warn:#ff9500;--info:#3b82f6;
+  --text0:#e4f0e8;--text1:#7a9a83;--text2:#3a5a42;--text3:#233028;
+  --font:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:8px;--rl:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg0);color:var(--text0);font-family:var(--font);font-size:14px;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,200,83,0.008) 3px,rgba(0,200,83,0.008) 4px);pointer-events:none;z-index:9998;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--border-hi);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 8px rgba(0,200,83,.15)}50%{box-shadow:0 0 22px rgba(0,200,83,.35)}}
+@keyframes flashGreen{0%{background:rgba(0,200,83,.2)}100%{background:transparent}}
+@keyframes flashRed{0%{background:rgba(255,68,68,.2)}100%{background:transparent}}
+@keyframes countUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* SKELETON */
+.skeleton{background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;}
+
+/* TICKER */
+.ticker-wrap{background:var(--bg1);border-bottom:1px solid var(--border);padding:6px 0;overflow:hidden;white-space:nowrap;position:relative;}
+.ticker-inner{display:inline-flex;gap:0;animation:ticker 90s linear infinite;}
+.ticker-inner:hover{animation-play-state:paused;}
+.tick-item{display:inline-flex;align-items:center;gap:8px;padding:0 28px;font-family:var(--mono);font-size:11px;border-right:1px solid var(--border);}
+.tick-sym{color:var(--text0);font-weight:600;}
+.tick-price{color:var(--text1);}
+.tick-up{color:var(--accent);}
+.tick-down{color:var(--danger);}
+.delay-notice{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:800;background:var(--bg1);padding:2px 8px;border-radius:4px;border:1px solid rgba(255,149,0,.3);color:var(--warn);z-index:2;display:flex;align-items:center;gap:5px;}
+
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;background:var(--bg1);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;gap:12px;}
+.logo{display:flex;align-items:center;gap:8px;flex-shrink:0;text-decoration:none;}
+.logo-mark{width:34px;height:34px;display:flex;align-items:center;justify-content:center;}
+.logo-mark svg{width:34px;height:34px;}
+.logo-text{font-size:17px;font-weight:800;letter-spacing:-.5px;color:var(--text0);}
+.logo-text em{color:var(--accent);font-style:normal;}
+.logo-core{font-size:9px;font-weight:800;background:rgba(0,200,83,.15);color:var(--accent);border:1px solid rgba(0,200,83,.3);padding:2px 6px;border-radius:3px;letter-spacing:.8px;margin-left:4px;vertical-align:2px;}
+.header-center{display:flex;gap:4px;flex-wrap:wrap;}
+.cpill{font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;border:1px solid var(--border);color:var(--text1);background:transparent;cursor:pointer;font-family:var(--font);letter-spacing:.2px;transition:all .18s;}
+.cpill:hover{border-color:var(--accent);color:var(--accent);}
+.cpill.active{background:var(--accent);color:var(--bg0);border-color:var(--accent);}
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.hbtn{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--border);background:transparent;color:var(--text1);font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;}
+.hbtn:hover{border-color:var(--border-hi);color:var(--text0);}
+.hbtn.upgrade{border-color:rgba(0,200,83,.4);color:var(--accent);background:rgba(0,200,83,.07);}
+.hbtn.upgrade:hover{background:rgba(0,200,83,.14);}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--warn);animation:pulse 1.2s infinite;}
+.live-dot.green{background:var(--accent);}
+
+/* TABS */
+.tabs{display:flex;align-items:center;gap:0;padding:0 22px;background:var(--bg1);border-bottom:1px solid var(--border);overflow-x:auto;}
+.tab{padding:11px 16px;font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:all .18s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.tab:hover{color:var(--text1);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab.locked{color:var(--text3);cursor:default;position:relative;}
+.tab.locked:hover{color:var(--text2);}
+.tab-lock{font-size:10px;opacity:.6;}
+.tbadge{font-size:9px;font-weight:800;padding:2px 6px;border-radius:10px;background:var(--accent);color:var(--bg0);}
+.tbadge.orange{background:var(--warn);color:var(--bg0);}
+
+/* MAIN */
+.main{padding:18px 22px;max-width:1600px;margin:0 auto;}
+.tc{display:none;animation:fadeUp .22s ease;}
+.tc.active{display:block;}
+
+/* METRICS */
+.mrow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px;}
+.mcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:13px 15px;position:relative;overflow:hidden;transition:border-color .2s;}
+.mcard:hover{border-color:var(--border-hi);}
+.mcard::before{content:'';position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(0,200,83,.05) 0%,transparent 70%);}
+.mlabel{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--text2);margin-bottom:5px;}
+.mval{font-size:22px;font-weight:800;font-family:var(--mono);color:var(--text0);transition:color .3s;}
+.mval.updated{animation:countUp .3s ease;}
+.msub{font-size:10px;color:var(--text2);margin-top:2px;}
+.cup{color:var(--accent)!important;}
+.cdown{color:var(--danger)!important;}
+.cwarn{color:var(--warn)!important;}
+
+/* PANELS */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:15px 17px;}
+.ptitle{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text1);margin-bottom:13px;display:flex;align-items:center;gap:7px;}
+.ptitle .acc{color:var(--accent);}
+.data-badge{font-size:8px;font-weight:800;padding:1px 6px;border-radius:4px;letter-spacing:.3px;}
+.data-delayed{background:rgba(255,149,0,.12);color:var(--warn);}
+.data-live{background:rgba(0,200,83,.12);color:var(--accent);}
+.data-locked{background:rgba(255,68,68,.1);color:var(--danger);}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 310px;gap:14px;margin-bottom:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.g2e{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+
+/* CHART AREA */
+.chart-wrap{position:relative;height:185px;}
+canvas{width:100%!important;}
+
+/* HEATMAP */
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.hm-cell{border-radius:5px;padding:8px 4px;text-align:center;cursor:pointer;transition:transform .15s,filter .15s;position:relative;overflow:hidden;}
+.hm-cell:hover{transform:scale(1.05);z-index:2;}
+.hm-sym{font-size:9px;font-weight:800;font-family:var(--mono);}
+.hm-pct{font-size:8px;font-family:var(--mono);margin-top:2px;}
+.hm-cell.pos{background:rgba(0,200,83,.35);}
+.hm-cell.pos2{background:rgba(0,200,83,.6);}
+.hm-cell.neg{background:rgba(255,68,68,.25);}
+.hm-cell.neg2{background:rgba(255,68,68,.45);}
+.hm-cell.flat{background:rgba(100,100,100,.2);}
+
+/* WALLET LIST */
+.wallet-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.wallet-row:last-child{border-bottom:none;}
+.wallet-addr{font-size:11px;font-family:var(--mono);color:var(--accent2);flex:1;}
+.wallet-val{font-size:12px;font-weight:800;font-family:var(--mono);color:var(--text0);}
+.wallet-chg{font-size:10px;font-family:var(--mono);}
+.wallet-del{font-size:10px;color:var(--text3);cursor:pointer;padding:3px 6px;border-radius:4px;border:1px solid transparent;transition:all .15s;}
+.wallet-del:hover{border-color:var(--danger);color:var(--danger);}
+.wallet-add-form{display:flex;gap:8px;margin-top:12px;}
+.wallet-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:7px 12px;color:var(--text0);font-family:var(--mono);font-size:11px;outline:none;transition:border-color .15s;}
+.wallet-input:focus{border-color:var(--accent);}
+.wallet-input::placeholder{color:var(--text2);}
+.wallet-add-btn{padding:7px 14px;background:var(--accent);color:var(--bg0);border:none;border-radius:var(--r);font-family:var(--font);font-weight:800;font-size:11px;cursor:pointer;transition:opacity .15s;}
+.wallet-add-btn:hover{opacity:.85;}
+.wallet-slot-bar{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:10px;color:var(--text2);}
+.slot-dots{display:flex;gap:3px;}
+.slot-dot{width:10px;height:10px;border-radius:50%;background:var(--bg4);border:1px solid var(--border);}
+.slot-dot.filled{background:var(--accent);border-color:var(--accent);}
+
+/* PRICE CHART CONTROLS */
+.chart-controls{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;align-items:center;}
+.crange{font-size:10px;font-weight:700;padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--text1);cursor:pointer;font-family:var(--font);transition:all .15s;}
+.crange:hover{border-color:var(--accent);color:var(--accent);}
+.crange.active{background:rgba(0,200,83,.12);border-color:var(--accent);color:var(--accent);}
+.asset-select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text0);font-family:var(--font);font-size:11px;outline:none;cursor:pointer;}
+
+/* LOCKED OVERLAY */
+.lock-overlay{position:relative;border-radius:var(--rl);overflow:hidden;}
+.lock-overlay .lock-blur{filter:blur(4px);pointer-events:none;user-select:none;}
+.lock-overlay .lock-panel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(7,9,15,.7);backdrop-filter:blur(2px);border-radius:var(--rl);z-index:10;}
+.lock-icon{font-size:28px;margin-bottom:8px;}
+.lock-title{font-size:14px;font-weight:800;color:var(--text0);margin-bottom:5px;}
+.lock-sub{font-size:11px;color:var(--text1);margin-bottom:14px;text-align:center;max-width:220px;line-height:1.5;}
+.lock-btn{padding:8px 20px;background:var(--accent);color:var(--bg0);border:none;border-radius:var(--r);font-family:var(--font);font-weight:800;font-size:12px;cursor:pointer;transition:opacity .15s;}
+.lock-btn:hover{opacity:.85;}
+
+/* FEED */
+.feed-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.feed-item:last-child{border-bottom:none;}
+.feed-addr{font-size:11px;font-family:var(--mono);color:var(--text1);flex:1;}
+.feed-amt{font-size:12px;font-weight:800;font-family:var(--mono);}
+.feed-tag{font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;letter-spacing:.3px;}
+.feed-tag.buy{background:rgba(0,200,83,.12);color:var(--accent);}
+.feed-tag.sell{background:rgba(255,68,68,.12);color:var(--danger);}
+.feed-tag.whale{background:rgba(0,200,83,.2);color:var(--accent2);}
+.feed-time{font-size:9px;color:var(--text2);font-family:var(--mono);}
+
+/* EMAIL DIGEST */
+.digest-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;}
+.digest-label{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text2);margin-bottom:5px;}
+.digest-title{font-size:13px;font-weight:700;color:var(--text0);margin-bottom:3px;}
+.digest-sub{font-size:11px;color:var(--text1);line-height:1.5;}
+.digest-time{font-size:9px;color:var(--text2);margin-top:5px;font-family:var(--mono);}
+.digest-input-row{display:flex;gap:8px;margin-top:12px;}
+.digest-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:8px 12px;color:var(--text0);font-family:var(--font);font-size:12px;outline:none;transition:border-color .15s;}
+.digest-input:focus{border-color:var(--accent);}
+.digest-input::placeholder{color:var(--text2);}
+.digest-btn{padding:8px 16px;background:var(--accent);color:var(--bg0);border:none;border-radius:var(--r);font-family:var(--font);font-weight:800;font-size:12px;cursor:pointer;transition:opacity .15s;}
+.digest-btn:hover{opacity:.85;}
+
+/* UPGRADE BANNER */
+.upgrade-banner{background:linear-gradient(135deg,rgba(0,200,83,.07),rgba(0,200,83,.03));border:1px solid rgba(0,200,83,.25);border-radius:var(--rl);padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.ub-left{display:flex;align-items:center;gap:12px;}
+.ub-icon{font-size:22px;}
+.ub-title{font-size:13px;font-weight:800;color:var(--text0);}
+.ub-sub{font-size:11px;color:var(--text1);margin-top:2px;}
+.ub-btn{padding:8px 18px;background:var(--accent);color:var(--bg0);border:none;border-radius:var(--r);font-family:var(--font);font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap;transition:opacity .15s;}
+.ub-btn:hover{opacity:.85;}
+
+/* FEAR GREED */
+.fg-gauge{width:100%;max-width:200px;margin:0 auto 10px;}
+.fg-label{font-size:11px;color:var(--text1);text-align:center;margin-top:4px;}
+.fg-val{font-size:32px;font-weight:800;font-family:var(--mono);text-align:center;}
+
+/* DOMINANCE */
+.dom-bar{margin-bottom:8px;}
+.dom-row{display:flex;align-items:center;gap:8px;margin-bottom:3px;}
+.dom-sym{font-size:10px;font-weight:700;font-family:var(--mono);width:36px;}
+.dom-bg{flex:1;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.dom-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .6s ease;}
+.dom-pct{font-size:10px;font-family:var(--mono);color:var(--text1);width:40px;text-align:right;}
+
+/* OVERVIEW TABLE */
+.atable{width:100%;border-collapse:collapse;font-size:12px;}
+.atable th{text-align:left;padding:7px 9px;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text2);border-bottom:1px solid var(--border);}
+.atable td{padding:10px 9px;border-bottom:1px solid rgba(30,60,38,.4);vertical-align:middle;}
+.atable tr:last-child td{border-bottom:none;}
+.atable tbody tr:hover td{background:var(--bg3);}
+.aname{font-weight:700;font-size:13px;color:var(--text0);}
+.asym{font-size:10px;color:var(--text2);font-family:var(--mono);}
+.pmono{font-family:var(--mono);font-size:12px;}
+.chup{color:var(--accent);font-weight:600;font-family:var(--mono);}
+.chdown{color:var(--danger);font-weight:600;font-family:var(--mono);}
+.spark{display:flex;align-items:flex-end;gap:2px;height:24px;}
+.spb{width:4px;min-height:2px;border-radius:1px;}
+
+/* TRENDING */
+.trend-list{display:flex;flex-direction:column;}
+.trend-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(30,60,38,.4);}
+.trend-row:last-child{border-bottom:none;}
+.trend-rank{font-family:var(--mono);font-size:11px;color:var(--text2);width:16px;flex-shrink:0;text-align:center;}
+.trend-name{flex:1;min-width:0;}
+.trend-sym{font-size:12px;font-weight:800;color:var(--text0);font-family:var(--mono);}
+.trend-full{font-size:9px;color:var(--text2);margin-top:1px;}
+.trend-fire{font-size:11px;}
+.trend-price{font-family:var(--mono);font-size:11px;color:var(--text1);flex-shrink:0;}
+.trend-vol{font-family:var(--mono);font-size:10px;color:var(--text2);flex-shrink:0;width:64px;text-align:right;}
+.trend-chg{font-family:var(--mono);font-size:12px;font-weight:700;min-width:66px;text-align:right;flex-shrink:0;}
+.trend-up{color:var(--accent);}
+.trend-down{color:var(--danger);}
+
+/* SEARCH */
+.sbox{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 11px;color:var(--text0);font-family:var(--font);font-size:12px;outline:none;width:190px;transition:border-color .15s;}
+.sbox:focus{border-color:var(--accent);}
+.sbox::placeholder{color:var(--text2);}
+
+/* STATUS BAR */
+.status-bar{background:var(--bg0);border-bottom:1px solid rgba(0,200,83,.08);padding:3px 22px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text2);font-family:var(--mono);}
+.src-pill{display:flex;align-items:center;gap:4px;}
+.src-dot{width:5px;height:5px;border-radius:50%;}
+.src-dot.ok{background:var(--accent);}
+.src-dot.warn{background:var(--warn);animation:pulse 1s infinite;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;overflow-y:auto;padding:30px 16px;}
+.modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;}
+.modal-box{background:var(--bg1);border:1px solid var(--border-hi);border-radius:14px;width:100%;max-width:480px;padding:26px;position:relative;animation:fadeUp .2s ease;}
+.modal-close{position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.modal-close:hover{border-color:var(--danger);color:var(--danger);}
+.modal-title{font-size:18px;font-weight:800;margin-bottom:6px;}
+.modal-sub{font-size:12px;color:var(--text1);margin-bottom:20px;line-height:1.6;}
+
+/* PRO FEATURES LIST */
+.pro-feat{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.pro-feat:last-child{border-bottom:none;}
+.pro-feat-icon{font-size:18px;width:28px;text-align:center;flex-shrink:0;}
+.pro-feat-title{font-size:12px;font-weight:700;color:var(--text0);}
+.pro-feat-sub{font-size:11px;color:var(--text1);margin-top:2px;}
+.pro-price-row{margin-top:18px;background:rgba(0,200,83,.07);border:1px solid rgba(0,200,83,.25);border-radius:var(--r);padding:14px;display:flex;align-items:center;justify-content:space-between;}
+.pro-price{font-size:24px;font-weight:800;font-family:var(--mono);color:var(--accent);}
+.pro-price sub{font-size:13px;color:var(--text1);}
+.pro-upgrade-btn{width:100%;padding:12px;background:var(--accent);color:var(--bg0);border:none;border-radius:var(--r);font-family:var(--font);font-size:14px;font-weight:800;cursor:pointer;margin-top:12px;transition:opacity .15s;}
+.pro-upgrade-btn:hover{opacity:.88;}
+
+/* VOLUME CHART */
+.vol-bar-row{display:flex;align-items:flex-end;gap:4px;height:80px;padding-top:8px;}
+.vol-bar{flex:1;border-radius:3px 3px 0 0;background:rgba(0,200,83,.4);min-height:4px;transition:height .4s ease;}
+.vol-bar:hover{background:var(--accent);}
+.vol-labels{display:flex;gap:4px;margin-top:4px;}
+.vol-lbl{flex:1;font-size:8px;color:var(--text2);text-align:center;font-family:var(--mono);}
+
+/* NOTIFICATION TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg1);border:1px solid var(--border-hi);border-radius:var(--rl);padding:12px 18px;font-size:12px;color:var(--text0);z-index:9999;display:flex;align-items:center;gap:10px;animation:fadeUp .25s ease;box-shadow:0 8px 32px rgba(0,0,0,.5);max-width:300px;}
+.toast.hidden{display:none;}
+.toast-icon{font-size:16px;}
+.toast-close{margin-left:auto;cursor:pointer;color:var(--text2);font-size:16px;flex-shrink:0;}
+
+/* BOTTOM SECTION LABEL */
+.section-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--accent);opacity:.7;margin-bottom:4px;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .mrow{grid-template-columns:1fr 1fr;}
+  .g2{grid-template-columns:1fr;}
+  .g3{grid-template-columns:1fr 1fr;}
+  .header-center{display:none;}
+}
+@media(max-width:600px){
+  .main{padding:14px 14px;}
+  .header{padding:10px 14px;}
+  .mrow{grid-template-columns:1fr 1fr;}
+  .g3{grid-template-columns:1fr;}
+  .heatmap-grid{grid-template-columns:repeat(5,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div class="src-pill"><div class="src-dot ok"></div>CoinGecko</div>
+    <div class="src-pill"><div class="src-dot ok"></div>Etherscan</div>
+
+  </div>
+  <div id="clockDisplay" style="font-family:var(--mono);font-size:10px;color:var(--text2);">--:--:-- UTC</div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="ticker"></div>
+
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <a class="logo" href="#">
+    <div class="logo-mark">
+      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="16" stroke="#00c853" stroke-width="2.5" fill="none" stroke-dasharray="80 20"/>
+        <circle cx="18" cy="18" r="8" stroke="#00c853" stroke-width="2" fill="none" opacity=".5"/>
+        <circle cx="18" cy="18" r="3" fill="#00c853"/>
+        <line x1="24" y1="24" x2="30" y2="30" stroke="#00c853" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="logo-text">Chain<em>Quant</em></span>
+    <span class="logo-core">CORE</span>
+  </a>
+  <div class="header-center">
+    <div class="cpill active" onclick="filterChain(this,'all')">All Chains</div>
+    <div class="cpill" onclick="filterChain(this,'eth')">Ethereum</div>
+    <div class="cpill" onclick="filterChain(this,'sol')">Solana</div>
+    <div class="cpill" onclick="filterChain(this,'base')">Base</div>
+  </div>
+  <div class="header-right">
+    <button class="hbtn" onclick="openModal('digestModal')">📬 Email Digest</button>
+    <button class="hbtn upgrade" onclick="openModal('upgradeModal')">⚡ Upgrade to Pro</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('overview')">📊 Overview</div>
+  <div class="tab" onclick="switchTab('markets')">📈 Markets</div>
+  <div class="tab" onclick="switchTab('wallets')">👛 My Wallets</div>
+  <div class="tab" onclick="switchTab('heatmap')">🗺 Heatmap</div>
+  <div class="tab locked" onclick="openModal('upgradeModal')">🐳 Whale Tracker <span class="tab-lock">🔒</span></div>
+  <div class="tab locked" onclick="openModal('upgradeModal')">🤖 AI Signals <span class="tab-lock">🔒</span></div>
+  <div class="tab locked" onclick="openModal('upgradeModal')">🔔 Alerts <span class="tab-lock">🔒</span></div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- UPGRADE BANNER -->
+  <div class="upgrade-banner">
+    <div class="ub-left">
+      <div class="ub-icon">🚀</div>
+      <div>
+        <div class="ub-title">You're on ChainQuant Core</div>
+        <div class="ub-sub">Upgrade to Pro for realtime data, Prediction Models, AI In-depth reports, AI signals, unlimited whale tracking, Discord alerts, Smart Wallet tracking, and more.</div>
+      </div>
+    </div>
+    <button class="ub-btn" onclick="openModal('upgradeModal')">Upgrade to Pro — $49/mo →</button>
+  </div>
+
+  <!-- ═══ OVERVIEW TAB ═══ -->
+  <div class="tc active" id="tab-overview">
+
+    <!-- METRIC CARDS -->
+    <div class="mrow">
+      <div class="mcard">
+        <div class="mlabel">BTC Price</div>
+        <div class="mval" id="m-btc">$67,841</div>
+        <div class="msub cup" id="m-btc-chg">▲ +2.34%</div>
+      </div>
+      <div class="mcard">
+        <div class="mlabel">ETH Price</div>
+        <div class="mval" id="m-eth">$3,412</div>
+        <div class="msub cup" id="m-eth-chg">▲ +1.87%</div>
+      </div>
+      <div class="mcard">
+        <div class="mlabel">Total Mkt Cap</div>
+        <div class="mval" id="m-mcap">$2.41T</div>
+        <div class="msub cup">▲ +3.1%</div>
+      </div>
+      <div class="mcard">
+        <div class="mlabel">BTC Dominance</div>
+        <div class="mval" id="m-dom">54.2%</div>
+        <div class="msub" style="color:var(--text2)">↑ trending up</div>
+      </div>
+      <div class="mcard">
+        <div class="mlabel">Fear & Greed</div>
+        <div class="mval cup" id="m-fg">72</div>
+        <div class="msub cup">Greed</div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="g2">
+      <!-- BTC PRICE CHART (7d) -->
+      <div class="panel">
+        <div class="ptitle">
+          <span class="acc">▸</span> PRICE CHART
+          <div style="margin-left:auto;">
+            <div class="chart-controls" style="margin:0;">
+              <select class="asset-select" onchange="renderPriceChart(this.value)" id="chartAsset">
+                <option value="BTC">BTC</option>
+                <option value="ETH">ETH</option>
+                <option value="SOL">SOL</option>
+                <option value="BNB">BNB</option>
+                <option value="ARB">ARB</option>
+              </select>
+              <div class="crange active" onclick="setRange(this,'7d')">7D</div>
+              <div class="crange" onclick="setRange(this,'30d')">30D</div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+      <!-- FEAR GREED + DOMINANCE -->
+      <div class="panel">
+        <div class="ptitle"><span class="acc">▸</span> MARKET SENTIMENT</div>
+        <div class="fg-val cup" id="fg-big">72</div>
+        <div class="fg-label" style="color:var(--accent)">GREED</div>
+        <div style="margin:14px 0;height:1px;background:var(--border);"></div>
+        <div class="ptitle" style="margin-bottom:10px;"><span class="acc">▸</span> DOMINANCE</div>
+        <div class="dom-bar" id="dominanceBars"></div>
+        <div style="margin:14px 0;height:1px;background:var(--border);"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div class="ptitle" style="margin:0;"><span class="acc">▸</span> 🔥 TRENDING ALTS</div>
+          <div class="chart-controls" style="margin:0;">
+            <div class="crange active" onclick="setTrendRange(this,'ov','d7')">7D</div>
+            <div class="crange" onclick="setTrendRange(this,'ov','d30')">30D</div>
+          </div>
+        </div>
+        <div class="trend-list" id="trendListOv"></div>
+        <div style="margin-top:8px;font-size:10px;color:var(--text2);text-align:center;"><a href="#" onclick="switchTab('markets');return false;" style="color:var(--accent);text-decoration:none;">See all trending in Markets →</a></div>
+      </div>
+    </div>
+
+    <!-- SECOND ROW -->
+    <div class="g3">
+      <!-- VOLUME -->
+      <div class="panel">
+        <div class="ptitle"><span class="acc">▸</span> 24H VOLUME TREND</div>
+        <div class="vol-bar-row" id="volBars"></div>
+        <div class="vol-labels" id="volLabels"></div>
+        <div style="margin-top:8px;font-size:11px;color:var(--text1);">24H Total: <span style="color:var(--accent);font-family:var(--mono);font-weight:700;" id="totalVol">$84.2B</span></div>
+      </div>
+      <!-- WALLET PREVIEW -->
+      <div class="panel">
+        <div class="ptitle"><span class="acc">▸</span> TRACKED WALLETS</div>
+        <div class="wallet-slot-bar">
+          <div class="slot-dots" id="slotDots"></div>
+          <span id="slotLabel">0 / 5 slots used</span>
+        </div>
+        <div id="walletPreview"></div>
+        <div style="margin-top:10px;text-align:center;">
+          <div style="font-size:10px;color:var(--text2);">Add up to 5 wallets. <a href="#" onclick="switchTab('wallets');return false;" style="color:var(--accent);text-decoration:none;">Manage →</a></div>
+        </div>
+      </div>
+      <!-- WHALE FEED (LOCKED) -->
+      <div class="lock-overlay">
+        <div class="panel lock-blur">
+          <div class="ptitle"><span class="acc">▸</span> WHALE FEED</div>
+          <div class="feed-item"><div class="feed-addr">0x7f3a...c91b</div><div class="feed-amt cup">+$2.4M</div><div class="feed-tag whale">WHALE</div></div>
+          <div class="feed-item"><div class="feed-addr">0x4e2d...88fa</div><div class="feed-amt cdown">-$890K</div><div class="feed-tag sell">SELL</div></div>
+          <div class="feed-item"><div class="feed-addr">0xc3b1...0042</div><div class="feed-amt cup">+$445K</div><div class="feed-tag buy">BUY</div></div>
+          <div class="feed-item"><div class="feed-addr">0xaa9f...7731</div><div class="feed-amt cup">+$1.1M</div><div class="feed-tag whale">WHALE</div></div>
+          <div class="feed-item"><div class="feed-addr">0xbe55...3310</div><div class="feed-amt cdown">-$220K</div><div class="feed-tag sell">SELL</div></div>
+        </div>
+        <div class="lock-panel">
+          <div class="lock-icon">🐳</div>
+          <div class="lock-title">Realtime Whale Feed</div>
+          <div class="lock-sub">Upgrade to Pro for live whale tracking, large wallet alerts, and smart money flows.</div>
+          <button class="lock-btn" onclick="openModal('upgradeModal')">Upgrade to Pro →</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end overview -->
+
+  <!-- ═══ MARKETS TAB ═══ -->
+  <div class="tc" id="tab-markets">
+
+    <!-- TOP TRENDING ALTCOINS -->
+    <div class="panel" style="margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+        <div class="ptitle" style="margin:0;"><span class="acc">▸</span> 🔥 TOP TRENDING ALTCOINS <span class="data-badge data-delayed">DELAYED</span></div>
+        <div class="chart-controls" style="margin:0;">
+          <div class="crange active" onclick="setTrendRange(this,'markets','d1')">1D</div>
+          <div class="crange" onclick="setTrendRange(this,'markets','d7')">7D</div>
+          <div class="crange" onclick="setTrendRange(this,'markets','d30')">30D</div>
+        </div>
+      </div>
+      <div class="trend-list" id="trendListMarkets"></div>
+      <div style="margin-top:11px;font-size:10px;color:var(--text2);text-align:center;">Top movers by price change · data delayed 15 min. <a href="#" onclick="openModal('upgradeModal');return false;" style="color:var(--accent);">Pro adds AI momentum scores, smart-money inflows & realtime trending →</a></div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+      <div class="ptitle" style="margin:0;"><span class="acc">▸</span> MARKET OVERVIEW</div>
+      <input class="sbox" placeholder="Search assets…" oninput="filterAssets(this.value)" id="assetSearch">
+    </div>
+    <div class="panel" style="padding:0;overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table class="atable" id="assetsTable">
+          <thead>
+            <tr>
+              <th>#</th><th>Asset</th><th>Price</th><th>24h %</th><th>7d %</th><th>Mkt Cap</th><th>Volume 24h</th><th>7D Chart</th>
+            </tr>
+          </thead>
+          <tbody id="assetsBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:10px;color:var(--text2);text-align:center;">Data delayed 15 minutes. <a href="#" onclick="openModal('upgradeModal');return false;" style="color:var(--accent);">Upgrade to Pro for realtime feeds →</a></div>
+  </div>
+
+  <!-- ═══ WALLETS TAB ═══ -->
+  <div class="tc" id="tab-wallets">
+    <div class="g2e">
+      <div class="panel">
+        <div class="ptitle"><span class="acc">▸</span> MY WALLETS</div>
+        <div class="wallet-slot-bar" style="margin-bottom:14px;">
+          <div class="slot-dots" id="slotDots2"></div>
+          <span id="slotLabel2">0 / 5 slots used</span>
+          <span style="margin-left:auto;font-size:9px;color:var(--text2);">Core limit: 5 wallets</span>
+        </div>
+        <div id="walletList"></div>
+        <div class="wallet-add-form" id="walletAddForm">
+          <input class="wallet-input" id="walletAddrInput" placeholder="Paste wallet address (0x... or sol...)">
+          <button class="wallet-add-btn" onclick="addWallet()">+ Add</button>
+        </div>
+        <div style="margin-top:12px;font-size:10px;color:var(--text2);">Connect MetaMask, Phantom, or WalletConnect in read-only mode. <span style="color:var(--accent);cursor:pointer;">Connect →</span></div>
+      </div>
+      <div class="panel">
+        <div class="ptitle"><span class="acc">▸</span> WALLET ANALYTICS</div>
+        <div id="walletStats">
+          <div style="text-align:center;padding:32px;color:var(--text2);">
+            <div style="font-size:28px;margin-bottom:8px;">👛</div>
+            <div style="font-size:13px;color:var(--text1);">Add a wallet to see holdings, flows, and activity snapshots.</div>
+          </div>
+        </div>
+        <!-- LOCK for advanced analytics -->
+        <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
+          <div class="ptitle" style="margin-bottom:8px;"><span style="color:var(--text3);">🔒</span> ADVANCED WALLET ANALYTICS</div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:10px;">AI clustering, PnL tracking, and smart money overlays require Pro.</div>
+          <button style="width:100%;padding:9px;background:transparent;border:1px solid rgba(0,200,83,.3);color:var(--accent);border-radius:var(--r);font-family:var(--font);font-weight:700;font-size:12px;cursor:pointer;" onclick="openModal('upgradeModal')">Unlock Advanced Analytics →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ HEATMAP TAB ═══ -->
+  <div class="tc" id="tab-heatmap">
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="ptitle"><span class="acc">▸</span> MARKET HEATMAP <span class="data-badge data-delayed">BASIC</span></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <div class="crange active" onclick="setHeatmapFilter(this,'all')">All</div>
+        <div class="crange" onclick="setHeatmapFilter(this,'l1')">Layer 1</div>
+        <div class="crange" onclick="setHeatmapFilter(this,'defi')">DeFi</div>
+        <div class="crange" onclick="setHeatmapFilter(this,'l2')">Layer 2</div>
+        <div class="crange" onclick="setHeatmapFilter(this,'gaming')">Gaming</div>
+        <div style="margin-left:auto;font-size:10px;color:var(--text2);">Hover for details</div>
+      </div>
+      <div class="heatmap-grid" id="heatmapGrid" style="grid-template-columns:repeat(8,1fr);"></div>
+    </div>
+    <!-- LEGEND -->
+    <div class="panel">
+      <div class="ptitle"><span class="acc">▸</span> HEATMAP LEGEND</div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:11px;">
+        <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:3px;background:rgba(0,200,83,.6);"></div> Strong gain (&gt;+5%)</div>
+        <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:3px;background:rgba(0,200,83,.35);"></div> Gain (+1–5%)</div>
+        <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:3px;background:rgba(100,100,100,.2);"></div> Flat (0–1%)</div>
+        <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:3px;background:rgba(255,68,68,.3);"></div> Loss (-1–5%)</div>
+        <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:3px;background:rgba(255,68,68,.5);"></div> Heavy loss (&gt;-5%)</div>
+      </div>
+      <div style="margin-top:12px;font-size:10px;color:var(--text2);">Advanced sector rotation analysis, narrative heatmaps, and real-time updates available in <a href="#" onclick="openModal('upgradeModal');return false;" style="color:var(--accent);">Pro →</a></div>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<!-- ═══ EMAIL DIGEST MODAL ═══ -->
+<div class="modal-overlay" id="digestModal">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-close" onclick="closeModal('digestModal')">×</div>
+    <div style="font-size:28px;margin-bottom:10px;">📬</div>
+    <div class="modal-title">Daily Email Digest</div>
+    <div class="modal-sub">A curated daily email with top whale movements, trending narratives, AI-flagged opportunities, and overnight market shifts — delivered every morning at 7am UTC.</div>
+    <!-- PRICING ROW -->
+    <div style="background:rgba(0,200,83,.07);border:1px solid rgba(0,200,83,.25);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:3px;">Monthly subscription</div>
+        <div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--accent);">$4.99<span style="font-size:13px;color:var(--text1);font-weight:400;">/mo</span></div>
+      </div>
+      <div style="text-align:right;font-size:11px;color:var(--text1);line-height:1.6;">Cancel anytime<br>No contracts</div>
+    </div>
+    <!-- WHAT'S INCLUDED -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text2);margin-bottom:8px;">What's included</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="color:var(--accent);">✓</span> Top whale movements from the past 24h</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="color:var(--accent);">✓</span> Trending narratives & sector shifts</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="color:var(--accent);">✓</span> AI-flagged opportunities & alerts</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="color:var(--accent);">✓</span> Overnight market summary</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="color:var(--accent);">✓</span> Delivered daily at 7am UTC</div>
+      </div>
+    </div>
+    <input class="digest-input" id="digestEmail" placeholder="your@email.com" type="email" style="width:100%;margin-bottom:10px;">
+    <button class="digest-btn" onclick="subscribeDigest()" style="width:100%;padding:12px;font-size:13px;">Subscribe — $4.99/mo →</button>
+    <div id="digestStatus" style="font-size:11px;color:var(--text1);min-height:16px;margin-top:8px;"></div>
+    <!-- SAMPLE -->
+    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;">Sample Digest Items</div>
+      <div class="digest-card"><div class="digest-label">Whale Alert</div><div class="digest-title">0x7f3a...c91b moved $8.4M into ETH</div><div class="digest-sub">Large wallet accumulated 2,470 ETH overnight before key resistance level.</div><div class="digest-time">Yesterday 11:42 PM UTC</div></div>
+      <div class="digest-card"><div class="digest-label">AI Opportunity</div><div class="digest-title">RWA sector flagged — +12% inflow surge</div><div class="digest-sub">AI detected coordinated inflows from 14 tracked smart wallets into RWA protocols.</div><div class="digest-time">Yesterday 09:15 PM UTC</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ UPGRADE MODAL ═══ -->
+<div class="modal-overlay" id="upgradeModal">
+  <div class="modal-box" style="max-width:520px;">
+    <div class="modal-close" onclick="closeModal('upgradeModal')">×</div>
+    <div style="font-size:28px;margin-bottom:10px;">⚡</div>
+    <div class="modal-title" style="color:var(--accent);">Upgrade to ChainQuant Pro</div>
+    <div class="modal-sub">You're currently on Core (Free). Unlock the full intelligence platform.</div>
+    <div class="pro-feat"><div class="pro-feat-icon">⚡</div><div><div class="pro-feat-title">Realtime Data</div><div class="pro-feat-sub">Live prices, live whale feeds, live AI signals — zero delay</div></div></div>
+    <div class="pro-feat"><div class="pro-feat-icon">🐳</div><div><div class="pro-feat-title">Unlimited Whale Tracking</div><div class="pro-feat-sub">Monitor any number of whale wallets across all chains</div></div></div>
+    <div class="pro-feat"><div class="pro-feat-icon">🤖</div><div><div class="pro-feat-title">AI Narrative Signals</div><div class="pro-feat-sub">AI-scored narratives with confidence ratings and timing</div></div></div>
+    <div class="pro-feat"><div class="pro-feat-icon">🔔</div><div><div class="pro-feat-title">Discord & Telegram Alerts</div><div class="pro-feat-sub">Real-time push alerts to your preferred platforms</div></div></div>
+    <div class="pro-feat"><div class="pro-feat-icon">📊</div><div><div class="pro-feat-title">Advanced Heatmaps</div><div class="pro-feat-sub">Sector rotation, smart money overlays, narrative maps</div></div></div>
+    <div class="pro-feat"><div class="pro-feat-icon">👛</div><div><div class="pro-feat-title">Unlimited Wallets + Watchlists</div><div class="pro-feat-sub">No limits on tracked wallets, full PnL analytics</div></div></div>
+    <div class="pro-price-row">
+      <div><div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Monthly subscription</div><div class="pro-price">$49<sub>/mo</sub></div></div>
+      <div style="font-size:11px;color:var(--text1);text-align:right;">Cancel anytime<br>No contracts</div>
+    </div>
+    <button class="pro-upgrade-btn">Upgrade to Pro →</button>
+    <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--text2);">Your Core data carries over. Cancel anytime.</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast">
+  <span class="toast-icon" id="toastIcon">✅</span>
+  <span id="toastMsg">Done!</span>
+  <span class="toast-close" onclick="hideToast()">×</span>
+</div>
+
+<script>
+// ══════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════
+const ASSETS = [
+  {rank:1,name:'Bitcoin',sym:'BTC',price:67841,d1:2.34,d7:8.1,mcap:'$1.32T',vol:'$32.4B',chain:'eth'},
+  {rank:2,name:'Ethereum',sym:'ETH',price:3412,d1:1.87,d7:5.6,mcap:'$410B',vol:'$18.7B',chain:'eth'},
+  {rank:3,name:'Solana',sym:'SOL',price:183.4,d1:4.21,d7:14.2,mcap:'$84B',vol:'$7.1B',chain:'sol'},
+  {rank:4,name:'BNB',sym:'BNB',price:572,d1:-0.84,d7:-2.1,mcap:'$83B',vol:'$2.8B',chain:'eth'},
+  {rank:5,name:'XRP',sym:'XRP',price:0.512,d1:1.2,d7:3.4,mcap:'$58B',vol:'$3.2B',chain:'eth'},
+  {rank:6,name:'USDC',sym:'USDC',price:1.0,d1:0.01,d7:0.02,mcap:'$42B',vol:'$8.1B',chain:'base'},
+  {rank:7,name:'Cardano',sym:'ADA',price:0.458,d1:-1.3,d7:-4.2,mcap:'$16B',vol:'$0.9B',chain:'eth'},
+  {rank:8,name:'Avalanche',sym:'AVAX',price:36.2,d1:-2.1,d7:-6.8,mcap:'$15B',vol:'$0.7B',chain:'eth'},
+  {rank:9,name:'Arbitrum',sym:'ARB',price:1.04,d1:3.8,d7:9.4,mcap:'$13B',vol:'$1.2B',chain:'eth'},
+  {rank:10,name:'Base',sym:'USDC.e',price:1.0,d1:0.0,d7:0.01,mcap:'$9B',vol:'$0.5B',chain:'base'},
+  {rank:11,name:'Chainlink',sym:'LINK',price:14.8,d1:2.9,d7:7.3,mcap:'$8.6B',vol:'$0.6B',chain:'eth'},
+  {rank:12,name:'Polygon',sym:'POL',price:0.71,d1:-0.5,d7:-1.8,mcap:'$7.1B',vol:'$0.4B',chain:'eth'},
+];
+
+// Trending altcoins (excludes BTC/ETH majors) — d1/d7/d30 % change, demo data
+const ALTS = [
+  {name:'Solana',sym:'SOL',price:183.4,d1:4.21,d7:14.2,d30:38.6,vol:'$7.1B'},
+  {name:'Arbitrum',sym:'ARB',price:1.04,d1:3.8,d7:9.4,d30:22.1,vol:'$1.2B'},
+  {name:'Optimism',sym:'OP',price:2.41,d1:2.1,d7:6.8,d30:17.4,vol:'$0.8B'},
+  {name:'Chainlink',sym:'LINK',price:14.8,d1:2.9,d7:7.3,d30:12.9,vol:'$0.6B'},
+  {name:'Injective',sym:'INJ',price:27.6,d1:6.4,d7:18.9,d30:44.2,vol:'$0.5B'},
+  {name:'Render',sym:'RNDR',price:8.12,d1:5.1,d7:21.4,d30:33.7,vol:'$0.4B'},
+  {name:'Celestia',sym:'TIA',price:9.85,d1:7.2,d7:24.6,d30:51.3,vol:'$0.6B'},
+  {name:'Sui',sym:'SUI',price:1.62,d1:3.4,d7:11.2,d30:28.8,vol:'$0.7B'},
+  {name:'Sei',sym:'SEI',price:0.412,d1:-1.8,d7:8.7,d30:19.5,vol:'$0.3B'},
+  {name:'Jupiter',sym:'JUP',price:0.88,d1:4.9,d7:13.1,d30:26.4,vol:'$0.5B'},
+  {name:'Pyth',sym:'PYTH',price:0.41,d1:2.6,d7:9.9,d30:15.2,vol:'$0.2B'},
+  {name:'GMX',sym:'GMX',price:47.2,d1:5.4,d7:16.3,d30:29.1,vol:'$0.3B'},
+  {name:'dYdX',sym:'DYDX',price:1.74,d1:4.1,d7:12.7,d30:23.6,vol:'$0.3B'},
+  {name:'Aave',sym:'AAVE',price:142.3,d1:3.2,d7:10.4,d30:20.8,vol:'$0.4B'},
+];
+
+const HEATMAP_DATA = [
+  {sym:'BTC',pct:2.34,cat:'l1'},{sym:'ETH',pct:1.87,cat:'l1'},
+  {sym:'SOL',pct:4.21,cat:'l1'},{sym:'BNB',pct:-0.84,cat:'l1'},
+  {sym:'ARB',pct:3.8,cat:'l2'},{sym:'OP',pct:2.1,cat:'l2'},
+  {sym:'MATIC',pct:-1.3,cat:'l2'},{sym:'AVAX',pct:-2.1,cat:'l1'},
+  {sym:'LINK',pct:2.9,cat:'defi'},{sym:'UNI',pct:1.4,cat:'defi'},
+  {sym:'AAVE',pct:3.2,cat:'defi'},{sym:'CRV',pct:-3.8,cat:'defi'},
+  {sym:'MKR',pct:1.8,cat:'defi'},{sym:'SNX',pct:-0.6,cat:'defi'},
+  {sym:'GMX',pct:5.4,cat:'defi'},{sym:'DYDX',pct:4.1,cat:'defi'},
+  {sym:'IMX',pct:6.2,cat:'gaming'},{sym:'BEAM',pct:8.4,cat:'gaming'},
+  {sym:'AXS',pct:-4.2,cat:'gaming'},{sym:'GALA',pct:2.7,cat:'gaming'},
+  {sym:'ILV',pct:-1.9,cat:'gaming'},{sym:'SAND',pct:-5.6,cat:'gaming'},
+  {sym:'MANA',pct:-3.1,cat:'gaming'},{sym:'APE',pct:-7.2,cat:'gaming'},
+];
+
+const DOMINANCE = [
+  {sym:'BTC',pct:54.2},{sym:'ETH',pct:17.0},{sym:'BNB',pct:3.4},
+  {sym:'SOL',pct:3.5},{sym:'XRP',pct:2.4},{sym:'Others',pct:19.5},
+];
+
+const TICKER_COINS = [
+  {sym:'BTC',price:'$67,841',chg:'+2.34%',up:true},
+  {sym:'ETH',price:'$3,412',chg:'+1.87%',up:true},
+  {sym:'SOL',price:'$183.4',chg:'+4.21%',up:true},
+  {sym:'BNB',price:'$572',chg:'-0.84%',up:false},
+  {sym:'XRP',price:'$0.512',chg:'+1.2%',up:true},
+  {sym:'AVAX',price:'$36.2',chg:'-2.1%',up:false},
+  {sym:'ARB',price:'$1.04',chg:'+3.8%',up:true},
+  {sym:'LINK',price:'$14.8',chg:'+2.9%',up:true},
+  {sym:'OP',price:'$2.41',chg:'+2.1%',up:true},
+  {sym:'GMX',price:'$47.2',chg:'+5.4%',up:true},
+  {sym:'ADA',price:'$0.458',chg:'-1.3%',up:false},
+  {sym:'DOGE',price:'$0.148',chg:'+0.9%',up:true},
+];
+
+// Wallet state
+let wallets = JSON.parse(localStorage.getItem('cq_wallets')||'[]');
+
+// ══════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  buildTicker();
+  renderPriceChart('BTC');
+  renderDominance();
+  renderVolume();
+  renderAssetsTable(ASSETS);
+  renderTrending('trendListMarkets',trendRanges.markets,10,false);
+  renderTrending('trendListOv',trendRanges.ov,5,true);
+  renderHeatmap(HEATMAP_DATA);
+  renderWallets();
+  startClock();
+});
+
+// CLOCK
+function startClock(){
+  function tick(){
+    const now = new Date();
+    document.getElementById('clockDisplay').textContent =
+      now.toUTCString().split(' ').slice(-2).join(' ').replace('GMT','UTC');
+  }
+  tick(); setInterval(tick,1000);
+}
+
+// TICKER
+function buildTicker(){
+  const el = document.getElementById('ticker');
+  let html = '';
+  const all = [...TICKER_COINS,...TICKER_COINS];
+  all.forEach(c=>{
+    html+=`<div class="tick-item"><span class="tick-sym">${c.sym}</span><span class="tick-price">${c.price}</span><span class="${c.up?'tick-up':'tick-down'}">${c.chg}</span></div>`;
+  });
+  el.innerHTML=html;
+}
+
+// TABS
+function switchTab(name){
+  document.querySelectorAll('.tab:not(.locked)').forEach((t,i)=>{
+    const tabs=['overview','markets','wallets','heatmap'];
+    t.classList.toggle('active',tabs[i]===name);
+  });
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  const el=document.getElementById('tab-'+name);
+  if(el) el.classList.add('active');
+}
+
+// CHAIN FILTER
+function filterChain(el,chain){
+  document.querySelectorAll('.cpill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const filtered = chain==='all'?ASSETS:ASSETS.filter(a=>a.chain===chain);
+  renderAssetsTable(filtered);
+}
+
+// PRICE CHART
+let priceChartInstance=null;
+let currentRange='7d';
+
+function setRange(el,range){
+  document.querySelectorAll('.crange').forEach(r=>r.classList.remove('active'));
+  el.classList.add('active');
+  currentRange=range;
+  renderPriceChart(document.getElementById('chartAsset').value);
+}
+
+function renderPriceChart(asset){
+  const canvas=document.getElementById('priceChart');
+  const ctx=canvas.getContext('2d');
+  if(priceChartInstance){priceChartInstance=null;ctx.clearRect(0,0,canvas.width,canvas.height);}
+  const pts=currentRange==='7d'?30:90;
+  const prices=[];
+  const labels=[];
+  let base={BTC:67841,ETH:3412,SOL:183,BNB:572,ARB:1.04}[asset]||100;
+  for(let i=pts;i>=0;i--){
+    base*=(1+(Math.random()-.48)*0.04);
+    prices.push(base);
+    if(currentRange==='7d') labels.push(i%5===0?`-${i}h`:'');
+    else labels.push(i%15===0?`-${i}d`:'');
+  }
+  const min=Math.min(...prices);
+  const max=Math.max(...prices);
+  const W=canvas.offsetWidth||600;
+  const H=185;
+  canvas.width=W;canvas.height=H;
+  const pad=12;
+  const grd=ctx.createLinearGradient(0,pad,0,H);
+  grd.addColorStop(0,'rgba(0,200,83,.18)');
+  grd.addColorStop(1,'rgba(0,200,83,.01)');
+  ctx.beginPath();
+  prices.forEach((p,i)=>{
+    const x=pad+(i/(prices.length-1))*(W-pad*2);
+    const y=H-pad-(p-min)/(max-min)*(H-pad*2);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle='#00c853';ctx.lineWidth=2;ctx.stroke();
+  ctx.lineTo(W-pad,H-pad);ctx.lineTo(pad,H-pad);ctx.closePath();
+  ctx.fillStyle=grd;ctx.fill();
+  // X labels
+  ctx.fillStyle='rgba(58,90,66,.9)';ctx.font='9px JetBrains Mono';
+  labels.forEach((l,i)=>{
+    if(!l)return;
+    const x=pad+(i/(labels.length-1))*(W-pad*2);
+    ctx.fillText(l,x-8,H-2);
+  });
+  // Current price
+  const last=prices[prices.length-1];
+  const first=prices[0];
+  const isUp=last>first;
+  ctx.fillStyle=isUp?'#00c853':'#ff4444';
+  ctx.font='bold 13px Syne';
+  ctx.fillText(`${asset} $${last.toLocaleString(undefined,{maximumFractionDigits:2})}`,pad,20);
+}
+
+// DOMINANCE
+function renderDominance(){
+  const el=document.getElementById('dominanceBars');
+  el.innerHTML=DOMINANCE.map(d=>`
+    <div class="dom-bar">
+      <div class="dom-row">
+        <div class="dom-sym">${d.sym}</div>
+        <div class="dom-bg"><div class="dom-fill" style="width:${(d.pct/55)*100}%"></div></div>
+        <div class="dom-pct">${d.pct}%</div>
+      </div>
+    </div>`).join('');
+}
+
+// VOLUME
+function renderVolume(){
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const vols=[72,84,61,93,88,77,84];
+  const max=Math.max(...vols);
+  document.getElementById('volBars').innerHTML=vols.map(v=>`
+    <div class="vol-bar" style="height:${(v/max)*70}px" title="$${v}B"></div>`).join('');
+  document.getElementById('volLabels').innerHTML=days.map(d=>`<div class="vol-lbl">${d}</div>`).join('');
+}
+
+// ASSETS TABLE
+function renderAssetsTable(assets){
+  const tbody=document.getElementById('assetsBody');
+  tbody.innerHTML=assets.map(a=>{
+    const up7=a.d7>=0;
+    const spark=genSpark(a.d1);
+    return `<tr>
+      <td style="color:var(--text2);font-family:var(--mono);font-size:11px;">${a.rank}</td>
+      <td><div class="aname">${a.name}</div><div class="asym">${a.sym}</div></td>
+      <td class="pmono">$${a.price.toLocaleString()}</td>
+      <td class="${a.d1>=0?'chup':'chdown'}">${a.d1>=0?'+':''}${a.d1}%</td>
+      <td class="${up7?'chup':'chdown'}">${up7?'+':''}${a.d7}%</td>
+      <td class="pmono" style="color:var(--text1);">${a.mcap}</td>
+      <td class="pmono" style="color:var(--text1);">${a.vol}</td>
+      <td><div class="spark">${spark}</div></td>
+    </tr>`;
+  }).join('');
+}
+
+function genSpark(trend){
+  const bars=7;
+  return Array.from({length:bars},(_,i)=>{
+    const h=8+Math.random()*16;
+    const up=trend>0?Math.random()>.35:Math.random()>.65;
+    return `<div class="spb" style="height:${h}px;background:${up?'var(--accent)':'var(--danger)'}"></div>`;
+  }).join('');
+}
+
+// TRENDING ALTCOINS
+let trendRanges={markets:'d1',ov:'d7'};
+function renderTrending(targetId,timeframe,limit,compact){
+  const el=document.getElementById(targetId);
+  if(!el)return;
+  const sorted=[...ALTS].sort((a,b)=>b[timeframe]-a[timeframe]).slice(0,limit);
+  el.innerHTML=sorted.map((a,i)=>{
+    const chg=a[timeframe];
+    const up=chg>=0;
+    const fire=i===0?'🔥':(i<3?'⚡':'');
+    return `<div class="trend-row">
+      <div class="trend-rank">${i+1}</div>
+      <div class="trend-name"><span class="trend-sym">${a.sym}</span> <span class="trend-fire">${fire}</span><div class="trend-full">${a.name}</div></div>
+      ${compact?'':`<div class="trend-price">$${a.price.toLocaleString()}</div>`}
+      ${compact?'':`<div class="trend-vol">${a.vol}</div>`}
+      <div class="trend-chg ${up?'trend-up':'trend-down'}">${up?'▲ +':'▼ '}${chg}%</div>
+    </div>`;
+  }).join('');
+}
+function setTrendRange(el,scope,tf){
+  el.parentElement.querySelectorAll('.crange').forEach(r=>r.classList.remove('active'));
+  el.classList.add('active');
+  trendRanges[scope]=tf;
+  if(scope==='markets') renderTrending('trendListMarkets',tf,10,false);
+  else renderTrending('trendListOv',tf,5,true);
+}
+
+function filterAssets(q){
+  const filtered=ASSETS.filter(a=>a.name.toLowerCase().includes(q.toLowerCase())||a.sym.toLowerCase().includes(q.toLowerCase()));
+  renderAssetsTable(filtered);
+}
+
+// HEATMAP
+let hmFilter='all';
+function setHeatmapFilter(el,f){
+  document.querySelectorAll('#tab-heatmap .crange').forEach(r=>r.classList.remove('active'));
+  el.classList.add('active');
+  hmFilter=f;
+  renderHeatmap(f==='all'?HEATMAP_DATA:HEATMAP_DATA.filter(d=>d.cat===f));
+}
+
+function renderHeatmap(data){
+  const el=document.getElementById('heatmapGrid');
+  el.innerHTML=data.map(d=>{
+    let cls='flat';
+    if(d.pct>5)cls='pos2';
+    else if(d.pct>0)cls='pos';
+    else if(d.pct<-5)cls='neg2';
+    else if(d.pct<0)cls='neg';
+    const color=d.pct>0?`rgba(0,200,83,${Math.min(1,Math.abs(d.pct)/10+.2)})`:`rgba(255,68,68,${Math.min(1,Math.abs(d.pct)/10+.2)})`;
+    return `<div class="hm-cell" style="background:${color}" title="${d.sym}: ${d.pct>0?'+':''}${d.pct}%">
+      <div class="hm-sym" style="color:${d.pct>0?'#fff':'#fff'}">${d.sym}</div>
+      <div class="hm-pct" style="color:rgba(255,255,255,.75)">${d.pct>0?'+':''}${d.pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+// WALLETS
+function renderWallets(){
+  updateSlots();
+  // Wallet list in Wallets tab
+  const wList=document.getElementById('walletList');
+  if(!wList)return;
+  if(wallets.length===0){
+    wList.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--text2);font-size:12px;">No wallets added yet.</div>';
+  } else {
+    wList.innerHTML=wallets.map((w,i)=>`
+      <div class="wallet-row">
+        <div class="wallet-addr">${w.addr}</div>
+        <div class="wallet-val">$${(Math.random()*20000+1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',')}</div>
+        <div class="wallet-chg cup">+${(Math.random()*5).toFixed(2)}%</div>
+        <div class="wallet-del" onclick="removeWallet(${i})">✕</div>
+      </div>`).join('');
+  }
+  // Show/hide add form
+  const form=document.getElementById('walletAddForm');
+  if(form) form.style.display=wallets.length>=5?'none':'flex';
+  // Preview in overview
+  const prev=document.getElementById('walletPreview');
+  if(prev){
+    if(wallets.length===0){
+      prev.innerHTML='<div style="font-size:11px;color:var(--text2);padding:8px 0;">No wallets tracked yet.</div>';
+    } else {
+      prev.innerHTML=wallets.slice(0,3).map(w=>`
+        <div class="wallet-row">
+          <div class="wallet-addr">${w.addr}</div>
+          <div class="wallet-val cup">$${(Math.random()*20000+1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',')}</div>
+        </div>`).join('');
+    }
+  }
+  // Wallet stats
+  const stats=document.getElementById('walletStats');
+  if(stats && wallets.length>0){
+    const totalVal=(wallets.length*8420).toLocaleString();
+    stats.innerHTML=`
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:4px;">Total Value</div>
+          <div style="font-size:20px;font-weight:800;font-family:var(--mono);color:var(--accent);">$${totalVal}</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:4px;">Wallets</div>
+          <div style="font-size:20px;font-weight:800;font-family:var(--mono);">${wallets.length} <span style="font-size:13px;color:var(--text2);">/ 5</span></div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--text2);text-align:center;">Wallet activity and holdings overview</div>`;
+  }
+}
+
+function updateSlots(){
+  const n=wallets.length;
+  ['slotDots','slotDots2'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML=Array.from({length:5},(_,i)=>`<div class="slot-dot${i<n?' filled':''}"></div>`).join('');
+  });
+  ['slotLabel','slotLabel2'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=`${n} / 5 slots used`;
+  });
+}
+
+function addWallet(){
+  const input=document.getElementById('walletAddrInput');
+  const addr=input.value.trim();
+  if(!addr){showToast('⚠️','Enter a wallet address');return;}
+  if(wallets.length>=5){showToast('🔒','Core allows max 5 wallets. Upgrade to Pro for unlimited.');return;}
+  if(addr.length<10){showToast('⚠️','Invalid address');return;}
+  const shortAddr=addr.length>16?addr.slice(0,6)+'...'+addr.slice(-4):addr;
+  wallets.push({addr:shortAddr,full:addr});
+  localStorage.setItem('cq_wallets',JSON.stringify(wallets));
+  input.value='';
+  renderWallets();
+  showToast('✅',`Wallet ${shortAddr} added`);
+}
+
+function removeWallet(i){
+  wallets.splice(i,1);
+  localStorage.setItem('cq_wallets',JSON.stringify(wallets));
+  renderWallets();
+  showToast('🗑','Wallet removed');
+}
+
+// MODALS
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.addEventListener('click',e=>{
+  if(e.target.classList.contains('modal-overlay')) e.target.classList.remove('open');
+});
+
+// DIGEST
+function subscribeDigest(){
+  const email=document.getElementById('digestEmail').value.trim();
+  const status=document.getElementById('digestStatus');
+  if(!email||!email.includes('@')){status.textContent='⚠️ Enter a valid email';status.style.color='var(--warn)';return;}
+  status.textContent='✅ Subscribed! Your first digest arrives tomorrow at 7am UTC.';
+  status.style.color='var(--accent)';
+  showToast('📬','Subscribed for $4.99/mo — digest starts tomorrow!');
+}
+
+// TOAST
+let toastTimer=null;
+function showToast(icon,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastIcon').textContent=icon;
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.add('hidden'),3500);
+}
+function hideToast(){document.getElementById('toast').classList.add('hidden');}
+
+// SIMULATE SMALL PRICE UPDATES (delayed-feel)
+setInterval(()=>{
+  const btc=document.getElementById('m-btc');
+  if(btc){
+    const v=parseFloat(btc.textContent.replace(/[$,]/g,''))*(1+(Math.random()-.5)*0.001);
+    btc.textContent='$'+v.toLocaleString(undefined,{maximumFractionDigits:0});
+  }
+},15000);
+</script>
+</body>
+</html>
