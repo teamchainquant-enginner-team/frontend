@@ -31,18 +31,9 @@ button{font-family:inherit;cursor:pointer;}
 ::-webkit-scrollbar-thumb{background:var(--line-3);border-radius:4px;}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px;}
 
-/* drafting rails */
-.rails{position:fixed;inset:0;max-width:var(--max);margin:0 auto;pointer-events:none;z-index:0;}
-.rails::before,.rails::after{content:'';position:absolute;top:0;bottom:0;width:1px;background:var(--line);}
-.rails::before{left:0;}.rails::after{right:0;}
+/* layout */
 .frame{max-width:var(--max);margin:0 auto;padding:0 var(--gut);position:relative;}
-
-.sect{position:relative;z-index:1;border-top:1px solid var(--line);}
-.tick{position:absolute;top:-5px;width:9px;height:9px;z-index:2;pointer-events:none;}
-.tick::before,.tick::after{content:'';position:absolute;background:var(--line-3);}
-.tick::before{left:4px;top:0;width:1px;height:9px;}
-.tick::after{top:4px;left:0;width:9px;height:1px;}
-.tick.l{left:-4.5px;}.tick.r{right:-4.5px;}
+.sect{position:relative;z-index:1;}
 
 /* type */
 .display{font-size:clamp(38px,5vw,64px);font-weight:600;letter-spacing:-0.038em;line-height:1.05;color:var(--ink);}
@@ -125,6 +116,7 @@ button{font-family:inherit;cursor:pointer;}
 .jp-body{padding:24px 20px 22px;}
 .jp-title{font-size:19px;font-weight:600;letter-spacing:-0.02em;color:var(--ink);margin-bottom:6px;}
 .jp-desc{font-size:13.5px;color:var(--ink-2);margin-bottom:22px;line-height:1.55;}
+.jp-desc strong{color:var(--ink);font-weight:600;}
 
 .field{margin-bottom:15px;}
 .field label{display:block;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;}
@@ -150,7 +142,9 @@ button{font-family:inherit;cursor:pointer;}
 .success-h{font-size:20px;font-weight:600;letter-spacing:-0.02em;margin-bottom:9px;}
 .success-p{font-size:13.5px;color:var(--ink-2);line-height:1.6;max-width:340px;margin:0 auto 18px;}
 .success-p strong{color:var(--ink);font-weight:600;}
-.success-meta{font-family:var(--mono);font-size:11px;color:var(--blue);border:1px solid var(--line-2);border-radius:7px;padding:10px 16px;display:inline-block;margin-bottom:18px;}
+.success-meta{font-family:var(--mono);font-size:11px;color:var(--blue);border:1px solid var(--line-2);border-radius:7px;padding:10px 16px;display:inline-block;margin-bottom:14px;}
+.success-note{font-size:12px;color:var(--ink-3);line-height:1.55;max-width:340px;margin:0 auto 18px;}
+.success-note strong{color:var(--ink-2);font-weight:500;}
 .share-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
 
 /* section shell */
@@ -218,7 +212,6 @@ button{font-family:inherit;cursor:pointer;}
 </style>
 </head>
 <body>
-<div class="rails"></div>
 
 <!-- ANNOUNCE -->
 <div class="announce">
@@ -268,7 +261,7 @@ button{font-family:inherit;cursor:pointer;}
         <div class="jp-body">
           <div id="formView">
             <div class="jp-title">Four details and you're in</div>
-            <p class="jp-desc">We'll email you the moment ChainQuant opens — plus your 10% first-year discount on Pro.</p>
+            <p class="jp-desc">You'll get an early access notification <strong>within the next month</strong> from <strong>alerts@chainquant.net</strong> — plus your 10% first-year discount on Pro.</p>
 
             <div class="field" id="f-name">
               <label>Name</label>
@@ -307,8 +300,9 @@ button{font-family:inherit;cursor:pointer;}
           <div class="success" id="successView">
             <div class="success-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
             <div class="success-h">You're on the list.</div>
-            <p class="success-p">We'll email you when ChainQuant launches Fall '26 — including your <strong>10% first-year discount</strong>. Watch your inbox.</p>
-            <div class="success-meta" id="successMeta">Confirmation sent to —</div>
+            <p class="success-p">You'll get your <strong>early access notification within the next month</strong>, sent from <strong>alerts@chainquant.net</strong> — along with your 10% first-year discount on Pro.</p>
+            <div class="success-meta" id="successMeta">Registered —</div>
+            <p class="success-note">Add <strong>alerts@chainquant.net</strong> to your contacts so it doesn't land in spam.</p>
             <div class="share-row">
               <a class="btn btn-quiet btn-sm" href="https://twitter.com/intent/tweet?text=Just+joined+the+%40TheChainQuant+waitlist+%E2%80%94+on-chain+intelligence+dropping+Fall+%2726." target="_blank" rel="noopener noreferrer">Share on X</a>
               <button class="btn btn-quiet btn-sm" onclick="copyLink()" id="copyBtn">Copy waitlist link</button>
@@ -322,7 +316,6 @@ button{font-family:inherit;cursor:pointer;}
 
 <!-- PRO CAPABILITIES -->
 <section class="sect">
-  <span class="tick l"></span><span class="tick r"></span>
   <div class="frame sect-inner">
     <div class="sect-head rv">
       <span class="eyebrow">What Pro unlocks</span>
@@ -373,7 +366,6 @@ button{font-family:inherit;cursor:pointer;}
 
 <!-- MEMBER BENEFITS -->
 <section class="sect">
-  <span class="tick l"></span><span class="tick r"></span>
   <div class="frame sect-inner">
     <div class="sect-head rv">
       <span class="eyebrow">Why join now</span>
@@ -402,7 +394,6 @@ button{font-family:inherit;cursor:pointer;}
 
 <!-- FAQ -->
 <section class="sect">
-  <span class="tick l"></span><span class="tick r"></span>
   <div class="frame sect-inner">
     <div class="sect-head rv"><span class="eyebrow">FAQ</span><h2 class="h2">Questions answered</h2></div>
     <div class="faq-wrap rv">
@@ -480,9 +471,26 @@ document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
 // FAQ
 function toggleFaq(btn){var item=btn.parentElement;var open=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(function(i){i.classList.remove('open');i.querySelector('.faq-a').style.maxHeight=null;});if(!open){item.classList.add('open');var a=item.querySelector('.faq-a');a.style.maxHeight=a.scrollHeight+'px';}}
 
-// LIVE COUNTER (real baseline + live signups from Supabase)
+// LIVE COUNTER
+// Starts at the real baseline (1,421) and counts UP by however many
+// people have actually signed up in Supabase. Refreshes every minute.
 let totalCount=WAITLIST_CONFIG.baseline;
-function renderCount(){var c=document.getElementById('counter');if(c)c.textContent=totalCount.toLocaleString();}
+let shownCount=WAITLIST_CONFIG.baseline;
+let countTimer=null;
+function paint(n){var c=document.getElementById('counter');if(c)c.textContent=Math.round(n).toLocaleString();}
+function countUpTo(target){
+  clearInterval(countTimer);
+  var from=shownCount, diff=target-from;
+  if(diff<=0){shownCount=target;paint(target);return;}
+  var start=Date.now(), dur=Math.min(1400,400+diff*45);
+  countTimer=setInterval(function(){
+    var t=Math.min(1,(Date.now()-start)/dur);
+    var eased=1-Math.pow(1-t,3);
+    shownCount=from+diff*eased;
+    paint(shownCount);
+    if(t>=1){clearInterval(countTimer);shownCount=target;paint(target);}
+  },30);
+}
 async function loadLiveCount(){
   if(!sbReady())return;
   try{
@@ -492,10 +500,12 @@ async function loadLiveCount(){
       body:'{}'
     });
     const live=parseInt(await r.json(),10);
-    if(!isNaN(live)){totalCount=WAITLIST_CONFIG.baseline+live;renderCount();}
+    if(!isNaN(live)){totalCount=WAITLIST_CONFIG.baseline+live;countUpTo(totalCount);}
   }catch(e){/* stay on baseline */}
 }
-renderCount();loadLiveCount();
+paint(WAITLIST_CONFIG.baseline);
+loadLiveCount();
+setInterval(loadLiveCount,60000);
 
 // VALIDATION
 function validateEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);}
@@ -545,8 +555,8 @@ async function submitForm(){
   spinner.style.display='none';
   document.getElementById('formView').style.display='none';
   document.getElementById('successView').style.display='block';
-  document.getElementById('successMeta').textContent='Confirmation sent to '+email;
-  totalCount+=1;renderCount();
+  document.getElementById('successMeta').textContent='Registered — '+email;
+  totalCount+=1;countUpTo(totalCount);
 }
 
 function saveEntry(entry){
