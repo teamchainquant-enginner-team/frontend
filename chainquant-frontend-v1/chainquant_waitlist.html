@@ -435,7 +435,7 @@ button{font-family:inherit;cursor:pointer;}
 const WAITLIST_CONFIG = {
   // ── Option A: Supabase (recommended) ──
   supabaseUrl:     'https://segccrrecdhzfwgptqsi.supabase.co',
-  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlZ2NjcnJlY2RoemZ3Z3B0cXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTMzNzIsImV4cCI6MjA5NTYyOTM3Mn0.x89EROpgd3qER0QB4BmeDeXuN5dnTK_79HXH1PuWlws',          // ← paste your anon (public) key here to go live
+  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlZ2NjcnJlY2RoemZ3Z3B0cXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTMzNzIsImV4cCI6MjA5NTYyOTM3Mn0.x89EROpgd3qER0QB4BmeDeXuN5dnTK_79HXH1PuWlws',          // live anon (public) key — safe in frontend
   table:           'waitlist',  // ← run the SQL below once to create this table
 
   // ── Option B: your own API instead of Supabase ──
@@ -457,8 +457,18 @@ const WAITLIST_CONFIG = {
       source     text
     );
     alter table waitlist enable row level security;
+
+    -- allow the public (anon) key to INSERT signups, but never read them back
     create policy "anon insert" on waitlist for insert to anon with check (true);
-    create policy "anon count"  on waitlist for select to anon using (true);
+    grant insert on table public.waitlist to anon;   -- REQUIRED: policy alone is not enough
+    -- (no select grant on purpose — that would expose every email & phone)
+
+    -- live count WITHOUT exposing any rows: a function that returns only the number.
+    -- (do NOT add a select policy for anon — that would expose every email & phone.)
+    create or replace function public.waitlist_count()
+      returns integer language sql security definer set search_path = public
+      as $$ select count(*)::int from waitlist $$;
+    grant execute on function public.waitlist_count() to anon;
 */
 
 const sbReady = () => WAITLIST_CONFIG.supabaseUrl && WAITLIST_CONFIG.supabaseAnonKey;
@@ -476,12 +486,12 @@ function renderCount(){var c=document.getElementById('counter');if(c)c.textConte
 async function loadLiveCount(){
   if(!sbReady())return;
   try{
-    const r=await fetch(`${WAITLIST_CONFIG.supabaseUrl}/rest/v1/${WAITLIST_CONFIG.table}?select=id`,{
-      method:'HEAD',
-      headers:{apikey:WAITLIST_CONFIG.supabaseAnonKey,Authorization:`Bearer ${WAITLIST_CONFIG.supabaseAnonKey}`,Prefer:'count=exact'}
+    const r=await fetch(`${WAITLIST_CONFIG.supabaseUrl}/rest/v1/rpc/waitlist_count`,{
+      method:'POST',
+      headers:{apikey:WAITLIST_CONFIG.supabaseAnonKey,Authorization:`Bearer ${WAITLIST_CONFIG.supabaseAnonKey}`,'Content-Type':'application/json'},
+      body:'{}'
     });
-    const cr=r.headers.get('content-range');
-    const live=cr&&cr.includes('/')?parseInt(cr.split('/')[1],10):0;
+    const live=parseInt(await r.json(),10);
     if(!isNaN(live)){totalCount=WAITLIST_CONFIG.baseline+live;renderCount();}
   }catch(e){/* stay on baseline */}
 }
