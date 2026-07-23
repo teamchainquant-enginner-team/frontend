@@ -1677,12 +1677,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
      The service_role key and the Etherscan key live ONLY in Railway
      env vars and must never appear in this file.
      ───────────────────────────────────────────────────────────── */
-  window.CQ_API = 'https://backend-production-cc414.up.railway.app';
+  window.CQ_API = '';                  // <- paste your Railway API URL, e.g. https://chainquant-api.up.railway.app
   window.CQ_SUPABASE_URL = 'https://segccrrecdhzfwgptqsi.supabase.co';
   window.CQ_SUPABASE_ANON_KEY = '';    // <- paste the Supabase anon (public) key
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
 <!-- NARRATIVE DETAIL OVERLAY -->
 <div class="ndetail-overlay" id="ndetail-overlay" onclick="if(event.target===this)closeNarrativeDetail()">
   <div class="ndetail-box">
@@ -4054,15 +4055,15 @@ function showDetail(id) {
     <div class="sbdown">${breakdownHtml}</div>
     <div class="stitle">Social & On-chain Signals</div>
     <div class="socrow">
-      <div class="socitem"><div class="socicon" style="color:#1d9bf0;">✕</div><div class="socval">${soc.tweets == null ? 'Unavailable' : soc.tweets.toLocaleString()}</div><div class="soclabel">Tweet Volume</div><div class="socchg" style="font-size:9px;color:var(--text2);">${soc.tweets == null ? 'No verified source connected' : 'Live X API'}</div></div>
-      <div class="socitem"><div class="socicon" style="color:#ff4500;">●</div><div class="socval">${soc.reddit == null ? 'Unavailable' : soc.reddit.toLocaleString()}</div><div class="soclabel">Reddit Subscribers</div><div class="socchg" style="font-size:9px;color:var(--accent);">${soc.reddit == null ? 'No verified source connected' : 'CoinGecko community'}</div></div>
-      <div class="socitem"><div class="socicon" style="color:${sentColor};">▲</div><div class="socval" style="color:${sentColor};">${soc.sentiment == null ? 'Unavailable' : soc.sentiment + '%'}</div><div class="soclabel">Sentiment Score</div><div class="socchg">${soc.sentiment == null ? 'No verified source connected' : soc.sentiment >= 70 ? 'Bullish' : soc.sentiment >= 50 ? 'Neutral' : 'Bearish'}</div></div>
-      ${soc.trendingRank ? `<div class="socitem"><div class="socicon" style="color:#00c805;">🔥</div><div class="socval" style="font-size:13px;">${soc.trendingRank}</div><div class="soclabel">CoinGecko Trending</div><div class="socchg" style="font-size:9px;color:var(--accent);">LIVE SIGNAL</div></div>` : `<div class="socitem"><div class="socicon" style="color:var(--accent4);">●</div><div class="socval">${soc.tgMembers == null ? 'Unavailable' : (soc.tgMembers/1000).toFixed(0) + 'K'}</div><div class="soclabel">Telegram Members</div></div>`}
-      <div class="socitem"><div class="socicon" style="color:var(--accent);">▲</div><div class="socval">${soc.wallets == null ? 'Unavailable' : (soc.wallets/1000).toFixed(0) + 'K'}</div><div class="soclabel">Unique Wallets</div></div>
-      <div class="socitem"><div class="socicon" style="color:${soc.whaleActivity === 'Very High' ? 'var(--danger)' : soc.whaleActivity === 'High' ? 'var(--warn)' : 'var(--accent2)'};">●</div><div class="socval" style="font-size:13px;">${soc.whaleActivity || 'Unavailable'}</div><div class="soclabel">Whale Activity</div></div>
+      <div class="socitem"><div class="socicon" style="color:#1d9bf0;">✕</div><div class="socval">${soc.tweets.toLocaleString()}</div><div class="soclabel">Est. Tweet Volume</div><div class="socchg" style="font-size:9px;color:var(--text2);">${ApiKeys.twitter ? 'Live X API' : 'Demo — X API not connected'}</div></div>
+      <div class="socitem"><div class="socicon" style="color:#ff4500;">●</div><div class="socval">${soc.reddit.toLocaleString()}</div><div class="soclabel">Reddit Subscribers</div><div class="socchg" style="font-size:9px;color:var(--accent);">CoinGecko community</div></div>
+      <div class="socitem"><div class="socicon" style="color:${sentColor};">▲</div><div class="socval" style="color:${sentColor};">${soc.sentiment}%</div><div class="soclabel">Sentiment Score</div><div class="socchg ${soc.sentiment >= 55 ? 'chup' : 'chdown'}">${soc.sentiment >= 70 ? 'Bullish' : soc.sentiment >= 50 ? 'Neutral' : 'Bearish'}</div></div>
+      ${soc.trendingRank ? `<div class="socitem"><div class="socicon" style="color:#00c805;">🔥</div><div class="socval" style="font-size:13px;">${soc.trendingRank}</div><div class="soclabel">CoinGecko Trending</div><div class="socchg" style="font-size:9px;color:var(--accent);">LIVE SIGNAL</div></div>` : `<div class="socitem"><div class="socicon" style="color:var(--accent4);">●</div><div class="socval">${(soc.tgMembers/1000).toFixed(0)}K</div><div class="soclabel">Est. Telegram</div></div>`}
+      <div class="socitem"><div class="socicon" style="color:var(--accent);">▲</div><div class="socval">${(soc.wallets/1000).toFixed(0)}K</div><div class="soclabel">Est. Unique Wallets</div></div>
+      <div class="socitem"><div class="socicon" style="color:${soc.whaleActivity === 'Very High' ? 'var(--danger)' : soc.whaleActivity === 'High' ? 'var(--warn)' : 'var(--accent2)'};">●</div><div class="socval" style="font-size:13px;">${soc.whaleActivity}</div><div class="soclabel">Whale Activity</div></div>
     </div>
     <div class="stitle">News & Intel</div>
-    <div class="nlist">${newsHtml || emptyState('Unavailable — no verified news source is connected.')}</div>
+    <div class="nlist">${newsHtml}</div>
   `;
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -4447,15 +4448,183 @@ function openAssetReport(id) {
     </div>
     <div class="report-actions">
       <button class="ract-btn" onclick="showDetail('${a.id}');closeReportBtn()">🔍 Quick View</button>
+      <button class="ract-btn" onclick="generateInstitutionalReport('${a.id}')">🏛 Generate Institutional Report</button>
       <button class="ract-btn" onclick="navigator.clipboard?.writeText('${(a.symbol||'').toUpperCase()} — ChainQuant Score: ${total}/100 · Live CoinGecko')">📋 Copy Score</button>
       <a href="${cgUrl(a.id)}" target="_blank" class="ract-btn primary">↗ Trade on CoinGecko</a>
     </div>
   `;
   document.getElementById('report-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  try { mountReportChart(a); } catch (_e) { /* chart is additive; never block the report */ }
 }
 function closeReport(e) { if (e && e.target !== document.getElementById('report-overlay')) return; closeReportBtn(); }
-function closeReportBtn() { document.getElementById('report-overlay').classList.remove('open'); document.body.style.overflow = ''; }
+function closeReportBtn() {
+  document.getElementById('report-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  if (window._cqChart) { try { window._cqChart.remove(); } catch (_e) {} window._cqChart = null; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REPORT CHART — multi-timeframe TradingView-style candles.
+   Data comes ONLY from the ChainQuant backend OHLC proxy (GET /api/ohlc/:id?tf=),
+   never from a browser->exchange call. If the backend or the library isn't
+   available, an honest message is shown — no candles are invented.
+   ═══════════════════════════════════════════════════════════════════════════ */
+const CQ_TF_LADDER = [
+  { id: '5m', label: '5m' }, { id: '15m', label: '15m' }, { id: '30m', label: '30m' },
+  { id: '1h', label: '1H' }, { id: '3h', label: '3H' }, { id: '6h', label: '6H' },
+  { id: '12h', label: '12H' }, { id: '1d', label: '24H' }, { id: '3d', label: '3D' }, { id: '1w', label: '7D' },
+];
+let _cqChartTF = '1h';
+
+function mountReportChart(a) {
+  const body = document.getElementById('report-body');
+  if (!body || document.getElementById('rpt-chart-section')) return;
+  const sec = document.createElement('div');
+  sec.className = 'report-section';
+  sec.id = 'rpt-chart-section';
+  sec.innerHTML = `
+    <div class="rs-title">Price Chart</div>
+    <div id="rpt-tf-ladder" style="display:flex;gap:2px;flex-wrap:wrap;margin-bottom:8px;overflow-x:auto;">
+      ${CQ_TF_LADDER.map(t => `<button class="rpt-tf-btn${t.id === _cqChartTF ? ' active' : ''}" data-tf="${t.id}"
+        onclick="cqChartSetTF('${a.id}','${t.id}')"
+        style="font-family:var(--mono);font-size:11px;font-weight:600;color:${t.id === _cqChartTF ? 'var(--accent)' : 'var(--text1)'};background:${t.id === _cqChartTF ? 'rgba(0,184,255,.10)' : 'transparent'};border:1px solid ${t.id === _cqChartTF ? 'rgba(0,184,255,.30)' : 'transparent'};padding:5px 11px;border-radius:6px;cursor:pointer;">${t.label}</button>`).join('')}
+    </div>
+    <div id="rpt-chart" style="width:100%;height:360px;position:relative;">
+      <div id="rpt-chart-msg" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-family:var(--mono);font-size:12px;color:var(--text2);padding:20px;">Loading candles…</div>
+    </div>`;
+  body.insertBefore(sec, body.firstChild);
+  cqChartSetTF(a.id, _cqChartTF);
+}
+
+function cqChartSetTF(id, tf) {
+  _cqChartTF = tf;
+  document.querySelectorAll('#rpt-tf-ladder .rpt-tf-btn').forEach(b => {
+    const on = b.dataset.tf === tf;
+    b.style.color = on ? 'var(--accent)' : 'var(--text1)';
+    b.style.background = on ? 'rgba(0,184,255,.10)' : 'transparent';
+    b.style.border = '1px solid ' + (on ? 'rgba(0,184,255,.30)' : 'transparent');
+  });
+  cqChartLoad(id, tf);
+}
+
+async function cqChartLoad(id, tf) {
+  const host = document.getElementById('rpt-chart');
+  const msg = document.getElementById('rpt-chart-msg');
+  if (!host) return;
+  const showMsg = (t) => { if (msg) { msg.textContent = t; msg.style.display = 'flex'; } };
+  if (typeof LightweightCharts === 'undefined') { showMsg('Chart library did not load.'); return; }
+  showMsg('Loading candles…');
+  const res = await cqGet(`/api/ohlc/${encodeURIComponent(id)}?tf=${tf}`);
+  const rows = res && res.value;
+  if (!rows || !rows.length) {
+    showMsg((res && res.note) || 'No OHLC series is available for this asset yet. Nothing is drawn rather than inventing a chart.');
+    return;
+  }
+  if (msg) msg.style.display = 'none';
+  if (window._cqChart) { try { window._cqChart.remove(); } catch (_e) {} }
+  const chart = LightweightCharts.createChart(host, {
+    layout: { background: { type: 'solid', color: 'transparent' }, textColor: '#8b98aa', fontFamily: "'JetBrains Mono', monospace", fontSize: 11 },
+    grid: { vertLines: { color: 'rgba(48,58,78,.22)' }, horzLines: { color: 'rgba(48,58,78,.22)' } },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+    rightPriceScale: { borderColor: 'rgba(48,58,78,.5)' },
+    timeScale: { borderColor: 'rgba(48,58,78,.5)', timeVisible: true, secondsVisible: false },
+    autoSize: true,
+  });
+  const candle = chart.addCandlestickSeries({ upColor: '#2bd67b', downColor: '#ff4444', borderVisible: false, wickUpColor: '#2bd67b', wickDownColor: '#ff4444' });
+  candle.setData(rows.map(r => ({ time: r.time || r.t, open: +(r.open ?? r.o), high: +(r.high ?? r.h), low: +(r.low ?? r.l), close: +(r.close ?? r.c) })));
+  if (rows[0] && (rows[0].volume != null || rows[0].v != null)) {
+    const vol = chart.addHistogramSeries({ priceScaleId: '', priceFormat: { type: 'volume' } });
+    vol.priceScale().applyOptions({ scaleMargins: { top: .82, bottom: 0 } });
+    vol.setData(rows.map(r => ({ time: r.time || r.t, value: +(r.volume ?? r.v ?? 0), color: (+ (r.close ?? r.c) >= +(r.open ?? r.o)) ? 'rgba(43,214,123,.35)' : 'rgba(255,68,68,.35)' })));
+  }
+  chart.timeScale().fitContent();
+  window._cqChart = chart;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GENERATE INSTITUTIONAL REPORT — standardized, shareable memo (print → PDF).
+   Every asset renders the SAME section order so two tokens can be compared
+   directly (the LSEG standardization point). Sections with no connected data
+   source render "Unavailable" rather than being filled with a guess.
+   ═══════════════════════════════════════════════════════════════════════════ */
+function generateInstitutionalReport(id) {
+  const a = (typeof assets !== 'undefined' ? assets : []).find(x => x.id === id);
+  if (!a) return;
+  const sc = a.scoreObj || { total: a.score };
+  const U = '<span style="color:#b06a00;">Unavailable — no connected data source</span>';
+  const num = (v, d = 2) => (v == null || isNaN(v)) ? '—' : Number(v).toLocaleString('en-US', { maximumFractionDigits: d });
+  const usd = (v) => v == null ? '—' : '$' + num(v, 0);
+  const pct = (v) => v == null ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(2) + '%';
+  const vr = a.market_cap > 0 ? (a.total_volume || 0) / a.market_cap * 100 : null;
+  const ts = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+  const bull = [], bear = [];
+  if ((a.price_change_percentage_24h || 0) > 8) bull.push(`24h momentum ${pct(a.price_change_percentage_24h)} (live CoinGecko)`);
+  if ((a.price_change_percentage_7d_in_currency || 0) > 15) bull.push(`7d trend ${pct(a.price_change_percentage_7d_in_currency)}`);
+  if (vr != null && vr > 15 && vr < 120) bull.push(`Healthy volume/market-cap ${num(vr, 1)}%`);
+  if (sc.isTrending) bull.push(`On CoinGecko trending (#${(sc.trendingRank || 0) + 1}) — real search interest`);
+  if ((a.price_change_percentage_24h || 0) < -12) bear.push(`24h drawdown ${pct(a.price_change_percentage_24h)}`);
+  if (vr != null && vr < 3) bear.push(`Thin volume/market-cap ${num(vr, 1)}% — low liquidity confirmation`);
+  if ((a.market_cap || 0) < 5e6) bear.push('Micro-cap — elevated manipulation and rug risk');
+  if (!bull.length) bull.push('No standout bullish factor in current live data.');
+  if (!bear.length) bear.push('No standout bearish factor in current live data.');
+
+  const section = (title, rows) => `
+    <h2>${title}</h2>
+    <table>${rows.map(([k, v]) => `<tr><td class="k">${k}</td><td class="v">${v}</td></tr>`).join('')}</table>`;
+
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>ChainQuant Institutional Report — ${a.name}</title>
+  <style>
+    @page{margin:18mm;}
+    body{font-family:-apple-system,Segoe UI,Inter,sans-serif;color:#111;font-size:12px;line-height:1.55;max-width:820px;margin:0 auto;padding:24px;}
+    .head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #07090f;padding-bottom:12px;margin-bottom:8px;}
+    .brand{font-weight:800;letter-spacing:.02em;font-size:15px;} .brand span{color:#1AA3FF;}
+    .meta{font-family:ui-monospace,monospace;font-size:10px;color:#555;text-align:right;}
+    h1{font-size:20px;margin:14px 0 2px;} .sub{color:#555;font-size:12px;margin-bottom:14px;}
+    h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#1AA3FF;border-bottom:1px solid #ddd;padding-bottom:4px;margin:18px 0 6px;}
+    table{width:100%;border-collapse:collapse;margin-bottom:4px;} td{padding:4px 6px;vertical-align:top;border-bottom:1px solid #f0f0f0;}
+    td.k{color:#555;width:42%;} td.v{font-family:ui-monospace,monospace;}
+    ul{margin:4px 0 8px 18px;padding:0;} li{margin:2px 0;}
+    .grade{font-size:26px;font-weight:800;}
+    .foot{margin-top:20px;border-top:1px solid #ddd;padding-top:8px;font-size:10px;color:#777;}
+    .badge{display:inline-block;background:#eef6ff;color:#1367a8;border:1px solid #bcdcff;border-radius:4px;padding:1px 7px;font-size:10px;font-family:ui-monospace,monospace;}
+    @media print{.noprint{display:none;}}
+  </style></head><body>
+  <div class="head">
+    <div><div class="brand">CHAIN<span>QUANT</span></div><div style="font-size:10px;color:#777;">Institutional Token Intelligence</div></div>
+    <div class="meta">Generated ${ts}<br>Asset ID: ${a.id}<br>Confidential — internal use</div>
+  </div>
+  <h1>${a.name} <span style="color:#888;font-size:15px;">${(a.symbol || '').toUpperCase()}</span></h1>
+  <div class="sub">${a.category || '—'} · ${a.chain || '—'} · <span class="grade" style="font-size:14px;">CQ ${sc.total || a.score}/100</span></div>
+
+  ${section('1 · Market — Price, Volume, Liquidity, Volatility', [
+    ['Price (USD)', a.current_price != null ? '$' + num(a.current_price, 6) : '—'],
+    ['Market cap', usd(a.market_cap)], ['24h volume', usd(a.total_volume)],
+    ['Volume / market cap', vr != null ? num(vr, 1) + '%' : '—'],
+    ['24h change', pct(a.price_change_percentage_24h)], ['7d change', pct(a.price_change_percentage_7d_in_currency)],
+    ['ATH change', pct(a.ath_change_percentage)],
+  ])}
+  ${section('2 · Whale Movements & Concentration', [['Holder concentration', U], ['Observed whale flow', `${U} <span class="badge">wire /api/whales/summary</span>`]])}
+  ${section('3 · Exchange Inflows / Outflows', [['Net exchange flow', U]])}
+  ${section('4 · Social / X Momentum', [['Social momentum', U + ' <span class="badge">TwitterAPI.io not connected</span>']])}
+  ${section('5 · Trending Narratives', [['CoinGecko trending', sc.isTrending ? `Yes — #${(sc.trendingRank || 0) + 1}` : 'Not trending'], ['Category', a.category || '—']])}
+  ${section('6 · ChainQuant Predictability Score', [['Opportunity', (sc.total || a.score) + '/100'], ['Model', 'ChainQuant scoring engine'], ['Grade', (sc.total || a.score) >= 75 ? 'A' : (sc.total || a.score) >= 55 ? 'B' : 'C']])}
+  ${section('7 · Recent Alerts & Significant Events', [['Alerts', U + ' <span class="badge">portfolio-aware alerts pending</span>']])}
+  <h2>8 · Bullish & Bearish Factors</h2>
+  <div style="display:flex;gap:18px;"><div style="flex:1;"><strong style="color:#0a7d2c;">Bullish</strong><ul>${bull.map(b => `<li>${b}</li>`).join('')}</ul></div>
+  <div style="flex:1;"><strong style="color:#b3261e;">Bearish</strong><ul>${bear.map(b => `<li>${b}</li>`).join('')}</ul></div></div>
+  ${section('9 · Token Unlocks & Catalysts', [['Upcoming unlocks', U + ' <span class="badge">DefiLlama emissions — partial coverage</span>']])}
+  ${section('10 · Sources & Timestamps', [['Market data', 'CoinGecko (live)'], ['Snapshot', ts], ['Scoring', 'ChainQuant engine']])}
+  ${section('11 · Data-Confidence', [['Confidence', 'Medium — live market + scoring present; on-chain, social and unlock surfaces not yet connected']])}
+
+  <div class="foot">ChainQuant produces analysis, not financial advice. Figures marked Unavailable have no connected data source and are deliberately not estimated. © ChainQuant.</div>
+  <div class="noprint" style="text-align:center;margin-top:16px;"><button onclick="window.print()" style="padding:8px 18px;font-size:13px;cursor:pointer;">Print / Save as PDF</button></div>
+  </body></html>`;
+
+  const w = window.open('', '_blank');
+  if (!w) { alert('Allow pop-ups to generate the report.'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+}
 
 // ══════════════════════════════════════════════
 // CONTEXT MENU
