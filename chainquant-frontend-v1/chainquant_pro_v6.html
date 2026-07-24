@@ -1102,17 +1102,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   <div class="tab" onclick="setTab('portfolio',this)">&#9679; Portfolio</div>
 </div>
 
-<!-- ASK CHAINQUANT — global command bar -->
-<div class="askbar">
-  <span style="font-size:11px;font-weight:800;color:var(--accent);white-space:nowrap;">&#9670; Ask ChainQuant</span>
-  <input class="ask-input" id="ask-input" placeholder="Ask about any asset, score, or filter — e.g. &quot;why is SOL's flip score high&quot; or &quot;high opportunity, low risk&quot;" onkeydown="if(event.key==='Enter')askCQ()">
-  <span class="ask-kbd">&#8984;K</span>
-  <button class="ask-go" onclick="askCQ()">Ask</button>
-</div>
-<div class="ask-panel" id="ask-panel">
-  <div class="ask-q" id="ask-q"></div>
-  <div class="ask-a" id="ask-a"></div>
-</div>
+<!-- Ask ChainQuant removed — the terminal's own surfaces (screener, filters,
+     reports, alerts) are the interface. No LLM command bar. -->
 
 <div class="main">
   <!-- ════ SCREENER ════ -->
@@ -2071,7 +2062,7 @@ async function loadAlertRules() {
   const res = await cqGet('/api/alerts');
   const rules = res?.value || [];
   if (!rules.length) {
-    el.innerHTML = emptyState('No alert rules yet. Type one into Ask ChainQuant &mdash; e.g. <em>"alert me when a flip score rises above 80 while liquidity risk stays low"</em> &mdash; and review the rule before it arms.');
+    el.innerHTML = emptyState('No alert rules yet. Create one from the Alerts panel &mdash; set the conditions, review the rule, then arm it.');
     return;
   }
   el.innerHTML = rules.map(r => {
@@ -3875,7 +3866,11 @@ async function askCQ() {
   out.innerHTML = `I can answer that once the backend and its data services are connected. Right now I can work with what is on screen — try:` + askSuggest();
 }
 document.addEventListener('keydown', e => {
-  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); document.getElementById('ask-input').focus(); }
+  // Cmd/Ctrl+K focuses the screener search now that the Ask bar is gone.
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    const el = document.getElementById('sbox');
+    if (el) { e.preventDefault(); el.focus(); }
+  }
 });
 
 // Boot Stage 5 surfaces. Both degrade silently to the existing behaviour.
