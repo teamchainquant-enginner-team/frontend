@@ -3273,6 +3273,9 @@ function renderTrending(containerId = 'trending-row') {
 }
 
 function showDetailById(id) {
+  // trending cards route to the full report like every other asset entry point
+  const _hit = (typeof assets !== 'undefined' ? assets : []).find(x => x.id === id);
+  if (_hit) { openAssetReport(id); return; }
   const a = assets.find(x => x.id === id);
   if (a) showDetail(a.id);
 }
@@ -3428,7 +3431,7 @@ function renderReport() {
   document.getElementById('rlist').innerHTML = fa.map(a => {
     const sc = a.score >= 70 ? 'shot' : a.score >= 55 ? 'swarm' : 'scool';
     const trendBadge = a.scoreObj?.isTrending ? '<span style="font-size:9px;color:var(--accent);margin-left:6px;">🔥 Live Trending</span>' : '';
-    return `<div class="ritem" onclick="showDetail('${a.id}')" oncontextmenu="showCtx(event,'${a.id}')">
+    return `<div class="ritem" onclick="openAssetReport('${a.id}')" oncontextmenu="showCtx(event,'${a.id}')">
       <div class="rrow"><span class="rname">${a.name} <span style="color:var(--text2);font-size:9px;font-family:var(--mono)">${(a.symbol||'').toUpperCase()}</span>${trendBadge}</span><span class="sbadge ${sc}">${a.score}/99</span></div>
       <div class="rdesc">${a.thesis?.substring(0, 105)}...</div>
     </div>`;
@@ -3443,7 +3446,7 @@ function renderTable() {
     const pot = potTag(a.score), chg = a.price_change_percentage_24h || 0, w7 = a.price_change_percentage_7d_in_currency || 0;
     const rk = a.risk || riskScore(a);
     const trendBadge = a.scoreObj?.isTrending ? '<span style="font-size:8px;color:var(--accent);margin-left:4px;">🔥</span>' : '';
-    return `<tr onclick="showDetail('${a.id}')" oncontextmenu="showCtx(event,'${a.id}')">
+    return `<tr onclick="openAssetReport('${a.id}')" oncontextmenu="showCtx(event,'${a.id}')">
       <td style="color:var(--text2);font-family:var(--mono);font-size:11px;">${i + 1}</td>
       <td><div class="aname">${a.name}${trendBadge}</div><div class="asym">${(a.symbol||'').toUpperCase()}</div><div class="acat">${a.category}</div></td>
       <td>${chainTag(a.chain)}</td>
@@ -3763,7 +3766,7 @@ function askSuggest() {
 }
 function askRow(a) {
   const r = a.risk || riskScore(a);
-  return `<div class="ask-row" onclick="showDetail('${a.id}')">
+  return `<div class="ask-row" onclick="openAssetReport('${a.id}')">
     <span><b>${a.name}</b> <span style="color:var(--text2);font-size:11px;">${(a.symbol || '').toUpperCase()}</span></span>
     <span style="display:flex;gap:8px;align-items:center;">
       <span style="font-family:var(--mono);color:${scColor(a.score)};font-weight:800;">${a.score}</span>
@@ -4109,7 +4112,7 @@ function buildHeatmap() {
     const mcBarW = Math.round(mcRatio * 100);
     const borderCol = isUp ? `rgba(0,184,255,${0.15 + intensity * .25})` : `rgba(255,68,68,${0.15 + intensity * .25})`;
     const trendMark = a.scoreObj?.isTrending ? ' 🔥' : '';
-    return `<div class="hmap-cell" style="background:${bg};min-height:${cellH}px;border-color:${borderCol};" onclick="showDetail('${a.id}')">
+    return `<div class="hmap-cell" style="background:${bg};min-height:${cellH}px;border-color:${borderCol};" onclick="openAssetReport('${a.id}')">
       <div class="hmap-sym" style="color:#fff;">${(a.symbol || '').toUpperCase()}${trendMark}</div>
       <div class="hmap-name">${a.name}</div>
       <div class="hmap-chg" style="color:${textCol};">${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%</div>
