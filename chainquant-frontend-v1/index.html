@@ -32,13 +32,11 @@ button{font-family:inherit;cursor:pointer;}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px;}
 
 /* drafting rails */
-.rails{position:fixed;inset:0;max-width:var(--max);margin:0 auto;pointer-events:none;z-index:0;}
-.rails::before,.rails::after{content:'';position:absolute;top:0;bottom:0;width:1px;background:var(--line);}
-.rails::before{left:0;}.rails::after{right:0;}
+.rails{display:none;}
 .frame{max-width:var(--max);margin:0 auto;padding:0 var(--gut);position:relative;}
 
 .sect{position:relative;z-index:1;border-top:1px solid var(--line);}
-.tick{position:absolute;top:-5px;width:9px;height:9px;z-index:2;pointer-events:none;}
+.tick{display:none;}
 .tick::before,.tick::after{content:'';position:absolute;background:var(--line-3);}
 .tick::before{left:4px;top:0;width:1px;height:9px;}
 .tick::after{top:4px;left:0;width:9px;height:1px;}
@@ -191,6 +189,10 @@ button{font-family:inherit;cursor:pointer;}
 /* section scaffolding */
 .pad{padding:112px 0;}
 .head{max-width:640px;}
+.head-c{max-width:760px;margin-left:auto;margin-right:auto;text-align:center;}
+.head-c .lede{max-width:640px;margin-left:auto;margin-right:auto;text-wrap:balance;}
+.head-c .eyebrow{justify-content:center;}
+.head-c .eyebrow::before{content:'';height:1px;width:34px;background:var(--line-2);}
 .head .h2{margin-top:20px;}
 .head .lede{margin-top:18px;max-width:540px;}
 .split-head{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;flex-wrap:wrap;}
@@ -231,13 +233,43 @@ button{font-family:inherit;cursor:pointer;}
 .price-trust .ck{color:var(--blue);flex-shrink:0;}
 
 /* features */
-.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:60px;}
-.feat{background:var(--bg);padding:30px 26px 32px;transition:background .22s;}
-.feat:hover{background:var(--panel);}
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:52px;}
+.feat{background:var(--panel);border:1px solid transparent;border-radius:12px;padding:28px 24px 30px;transition:border-color .22s,background .22s,transform .22s;}
+.feat:hover{background:var(--panel-2);border-color:rgba(26,163,255,0.38);transform:translateY(-2px);}
 .feat .ic{color:var(--blue);}
 .feat h3{font-size:16px;font-weight:600;letter-spacing:-0.015em;margin-top:18px;}
 .feat p{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin-top:10px;}
 .feat .t{font-family:var(--mono);font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);margin-top:18px;display:block;}
+
+/* pro demo */
+.demo-cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px;}
+.demo-btn{height:50px;padding:0 30px;font-size:15px;box-shadow:0 12px 34px -10px rgba(26,163,255,0.6);}
+.demo-btn-2{height:50px;padding:0 26px;font-size:14px;}
+.demo-trust{display:flex;flex-wrap:wrap;justify-content:center;gap:11px 26px;margin-top:24px;}
+.demo-trust span{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-2);}
+.demo-trust .ck{color:var(--blue);flex-shrink:0;}
+.demo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:56px;}
+.dcard{background:var(--panel);border:1px solid transparent;border-radius:14px;padding:26px 24px 28px;transition:border-color .22s,background .22s,transform .22s;}
+.dcard:hover{background:var(--panel-2);border-color:rgba(26,163,255,0.38);transform:translateY(-2px);}
+.dcard .ic{color:var(--blue);}
+.dcard h3{font-size:16px;font-weight:600;letter-spacing:-0.015em;margin-top:16px;}
+.dcard p{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin-top:10px;}
+.dlist{list-style:none;margin-top:13px;display:flex;flex-direction:column;gap:9px;}
+.dlist li{position:relative;padding-left:17px;font-size:13px;color:var(--ink-2);line-height:1.45;}
+.dlist li::before{content:'';position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:1.5px;background:var(--blue);}
+.dband .dlist li{color:var(--ink-2);}
+.dcard .t{font-family:var(--mono);font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);margin-top:16px;display:block;}
+.dcard .t b{color:var(--blue);font-weight:500;}
+.dband{grid-column:1/-1;background:linear-gradient(180deg,rgba(26,163,255,0.11),rgba(26,163,255,0.02) 46%,transparent),var(--panel-2);border:1.5px solid transparent;border-radius:16px;padding:34px 32px;display:grid;grid-template-columns:1.15fr 1fr;gap:30px;align-items:center;box-shadow:0 0 0 4px rgba(26,163,255,0.05),0 30px 66px -30px rgba(26,163,255,0.42);}
+.dband .ic{color:var(--blue);}
+.dband h3{font-size:20px;font-weight:600;letter-spacing:-0.02em;margin-top:14px;}
+.dband p{font-size:14px;color:var(--ink-2);line-height:1.62;margin-top:11px;}
+.dband-chips{display:flex;flex-wrap:wrap;gap:9px;}
+.dchip{font-family:var(--mono);font-size:11px;letter-spacing:0.03em;color:var(--ink-2);background:var(--bg);border:1px solid var(--line-2);border-radius:7px;padding:8px 12px;white-space:nowrap;}
+.dband-list{list-style:none;column-count:2;column-gap:30px;}
+.dband-list li{position:relative;padding-left:17px;font-size:13.5px;color:var(--ink-2);line-height:1.45;margin-bottom:14px;break-inside:avoid;-webkit-column-break-inside:avoid;}
+.dband-list li:last-child{margin-bottom:0;}
+.dband-list li::before{content:'';position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:1.5px;background:var(--blue);}
 
 /* stats */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);}
@@ -334,6 +366,8 @@ button{font-family:inherit;cursor:pointer;}
   .hero-grid{grid-template-columns:1fr;gap:44px;}
   .readout{max-width:440px;}
   .feat-grid{grid-template-columns:1fr 1fr;}
+  .demo-grid{grid-template-columns:1fr 1fr;}
+  .dband{grid-template-columns:1fr;gap:22px;}
   .deep,.infra{grid-template-columns:1fr;}
   .src-grid{grid-template-columns:1fr 1fr;}
   .src:nth-child(3n){border-right:1px solid var(--line);}
@@ -352,6 +386,9 @@ button{font-family:inherit;cursor:pointer;}
   .hero{padding:60px 0 0;}
   .pad{padding:76px 0;}
   .feat-grid{grid-template-columns:1fr;}
+  .demo-grid{grid-template-columns:1fr;}
+  .dband-list{column-count:1;}
+  .demo-btn,.demo-btn-2{width:100%;justify-content:center;}
   .stats{grid-template-columns:1fr 1fr;}
   .stat{border-left:0;border-top:1px solid var(--line);padding:30px 0;}
   .stat:first-child,.stat:nth-child(2){border-top:0;}
@@ -477,55 +514,56 @@ button{font-family:inherit;cursor:pointer;}
 <!-- DATA RAIL -->
 <div class="rail"><div class="rail-in" id="rail"></div></div>
 
-<!-- PRICING (right under hero) -->
-<section class="sect pad" id="pricing">
-  <div class="frame"><span class="tick l"></span><span class="tick r"></span>
-    <div class="head">
-      <div class="eyebrow rv">Pricing</div>
-      <h2 class="h2 rv d1">Start free. Go Pro when it counts.</h2>
-      <p class="lede rv d2">Core gets you exploring. Pro gives you the realtime edge that can pay for itself in a single trade &mdash; for less than $2 a day.</p>
-    </div>
-    <div class="price-grid rv d1">
-      <div class="plan">
-        <div class="plan-name">Core &middot; Free</div>
-        <div class="plan-price"><sup>$</sup>0<sub>/mo</sub></div>
-        <div class="plan-desc">Get started with on-chain intelligence at no cost.</div>
-        <ul class="plan-feats"><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Delayed market data (15 min)</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Track up to 5 wallets</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Basic market heatmaps</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Email digest alerts</li><li class="off"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3 6.5h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Realtime whale tracking</li><li class="off"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3 6.5h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>AI narrative signals</li><li class="off"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3 6.5h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Discord + Telegram alerts</li></ul>
-        <a href="chainquant_core.html" class="btn btn-quiet">Start free</a>
+<!-- REQUEST A PRO DEMO (right under hero) -->
+<section class="sect pad" id="demo">
+  <div class="frame">
+    <div class="head head-c">
+      <div class="eyebrow rv">ChainQuant Pro</div>
+      <h2 class="h2 rv d1">See the terminal institutions run on.</h2>
+      <p class="lede rv d2">A live, guided walkthrough of ChainQuant Pro &mdash; standardized token intelligence, read-only wallet tracking, portfolio-aware alerts, and full desk administration. Purpose-built for trading firms, funds, and desks.</p>
+      <div class="demo-cta-row rv d3">
+        <a href="mailto:support@chainquant.net?subject=ChainQuant%20Pro%20Demo%20Request&body=Firm%3A%0AName%3A%0ASeats%20needed%3A%0AWhat%20you%27d%20like%20to%20see%3A%0A" class="btn btn-blue plan-cta demo-btn">Request a Pro Demo <svg class="arr" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a href="chainquant_pro_page.html" class="btn btn-quiet demo-btn-2">Explore Pro</a>
       </div>
-      <div class="plan feat">
-        <div class="plan-ribbon"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1l1.4 3 3.3.45-2.4 2.3.58 3.3L6 8.85 3.12 10.05l.58-3.3L1.3 4.45 4.6 4z"/></svg> Most Popular</div>
-        <div class="plan-name acc">Pro</div>
-        <div class="plan-price"><sup>$</sup>59<sub>/mo</sub></div>
-        <div class="plan-perday"><b>&asymp; $1.97 / day</b> &middot; billed monthly</div>
-        <div class="plan-save"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1l1.4 3 3.3.45-2.4 2.3.58 3.3L6 8.85 3.12 10.05l.58-3.3L1.3 4.45 4.6 4z"/></svg> Get 10% off Pro &mdash; pay yearly</div>
-        <div class="plan-desc">The complete intelligence platform for active traders.</div>
-        <div class="plan-anchor">Everything in Core, <b>plus:</b></div>
-        <ul class="plan-feats"><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Realtime market intelligence</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited whale tracking</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>AI narrative signals &amp; scoring</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>AI prediction model</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>In-depth intelligence reports</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Realtime Discord + Telegram alerts</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Advanced sector heatmaps</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited watchlists</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Full wallet flow analytics</li></ul>
-        <a href="chainquant_pro_page.html" class="btn btn-blue plan-cta">Go Pro <svg class="arr" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <div class="plan-reassure">Cancel anytime &middot; Non-custodial</div>
-      </div>
-      <div class="plan">
-        <div class="plan-name">Elite</div>
-        <div class="plan-price tbd">TBD</div>
-        <div class="plan-desc">Tailored analytics &amp; onboarding for institutional funds.</div>
-        <ul class="plan-feats"><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in Pro</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Governance intelligence layer</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>ML wallet clustering engine</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Strategic acquisition analysis</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Institutional portfolio analytics</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Dedicated support &amp; onboarding</li><li><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Custom data integrations</li></ul>
-        <div class="plan-soon">Coming soon &middot; join waitlist</div>
+      <div class="demo-trust rv d3">
+        <span><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Read-only &amp; non-custodial</span>
+        <span><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Never asks for keys or signatures</span>
+        <span><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Compliant data stack</span>
+        <span><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> SSO &amp; audit-ready</span>
       </div>
     </div>
-    <div class="price-trust rv d2">
-      <span><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> No card required for Core</span>
-      <span><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Cancel anytime</span>
-      <span><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Non-custodial &amp; read-only</span>
-      <span><svg class="ck" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Compliant data stack</span>
+
+    <div class="demo-grid rv d1">
+      <div class="dcard"><span class="ic"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 3h7l4 4v12H6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M13 3v4h4" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 12h6M9 15h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><h3>Institutional Token Reports</h3><ul class="dlist"><li>Price, liquidity &amp; whale flows</li><li>Exchange inflows / outflows</li><li>X momentum &amp; trending narratives</li><li>ChainQuant predictability score</li><li>Unlocks, catalysts &amp; recent alerts</li><li>One-click export to a shareable memo</li></ul><span class="t">Standardized &middot; Exportable</span></div>
+      <div class="dcard"><span class="ic"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="5" cy="6" r="2" stroke="currentColor" stroke-width="1.3"/><circle cx="17" cy="6" r="2" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="16" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M6.6 7.3l3.2 7M15.4 7.3l-3.2 7M7 6h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span><h3>ChainQuant Entity Layer</h3><ul class="dlist"><li>One ChainQuant ID per asset</li><li>Contracts linked across chains</li><li>Wrapped &amp; bridged versions mapped</li><li>Treasury &amp; deployer wallets</li><li>Listings, investors &amp; name history</li></ul><span class="t">Cross-chain identity</span></div>
+      <div class="dcard"><span class="ic"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 7a2 2 0 012-2h10v3" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><rect x="3.2" y="7" width="15.6" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/></svg></span><h3>Portfolio Wallet Tracker</h3><ul class="dlist"><li>Paste any public address</li><li>No signature, seed phrase or key</li><li>Balances, realized &amp; unrealized P&amp;L</li><li>Allocation by token, chain &amp; narrative</li><li>Transfers &amp; unlock exposure</li><li>Combine wallets into one book</li></ul><span class="t"><b>Read-only</b> &middot; No keys</span></div>
+      <div class="dcard"><span class="ic"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 9a5 5 0 0110 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.3 18a2 2 0 003.4 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><h3>Portfolio-aware Alerts</h3><ul class="dlist"><li>Tied to what you actually hold</li><li>&ldquo;$15M ETH to Coinbase &mdash; 27% of your book&rdquo;</li><li>Exchange-flow &amp; sentiment triggers</li><li>Score-change triggers</li><li>Multi-factor, combinable rules</li></ul><span class="t">Multi-factor</span></div>
+      <div class="dcard"><span class="ic"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 3h10v16l-5-3-5 3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 8l1.6 1.6L14 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Watchlists &amp; Saved Filters</h3><ul class="dlist"><li>Unlimited watchlists</li><li>Tokens, wallets &amp; narratives</li><li>Saved filters your desk reuses</li><li>Track competitor &amp; treasury wallets</li><li>Watch smart-money separately</li></ul><span class="t">Saved &middot; Per-desk</span></div>
+      <div class="dcard"><span class="ic"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 3v16h15" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="7" y="9" width="2.6" height="6" stroke="currentColor" stroke-width="1.2"/><path d="M8.3 7v2M8.3 15v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><rect x="13" y="6" width="2.6" height="8" stroke="currentColor" stroke-width="1.2"/><path d="M14.3 4v2M14.3 14v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span><h3>Configurable Report Charts</h3><ul class="dlist"><li>TradingView-style, in every report</li><li>5m / 15m / 30m / 1h intervals</li><li>3h / 6h / 12h / 24h / 3d / 7d</li><li>Click, zoom &amp; filter inline</li></ul><span class="t">5m &ndash; 7d intervals</span></div>
+
+      <div class="dband">
+        <div class="dband-l">
+          <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 3.3v5.4c0 4.6-3.4 7.9-8 9-4.6-1.1-8-4.4-8-9V6.3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8.5 12l2.3 2.3L15.5 9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <h3>Admin &amp; enterprise control</h3>
+          <p>A 100-seat client isn&rsquo;t buying 100 passwords &mdash; it needs a control plane. ChainQuant Enterprise gives desks centralized administration, permissions and audit, built in from day one.</p>
+        </div>
+        <ul class="dband-list">
+          <li>Organization administration</li>
+          <li>Access &amp; permission controls</li>
+          <li>Authentication &amp; security</li>
+          <li>Team &amp; desk separation</li>
+          <li>Audit &amp; compliance</li>
+          <li>Usage &amp; data governance</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- INTELLIGENCE FEATURES -->
 <section class="sect pad" id="features">
-  <div class="frame"><span class="tick l"></span><span class="tick r"></span>
-    <div class="head">
+  <div class="frame">
+    <div class="head head-c">
       <div class="eyebrow rv">Intelligence</div>
       <h2 class="h2 rv d1">Every layer of on-chain intelligence, in one terminal.</h2>
       <p class="lede rv d2">Every signal, every wallet, every narrative &mdash; indexed, scored, and surfaced before the market reacts.</p>
@@ -600,11 +638,11 @@ button{font-family:inherit;cursor:pointer;}
     <div class="sources rv d2">
       <div class="sources-head"><span>Data sources &middot; licensed &amp; compliant</span><span class="live"><span class="live-dot"></span>6 / 6 operational</span></div>
       <div class="src-grid">
-        <div class="src"><div class="n"><span class="ok"></span>Moralis</div><div class="r">EVM wallet data &middot; DEX trades &middot; PnL</div><div class="t">Primary</div></div>
-        <div class="src"><div class="n"><span class="ok"></span>Helius</div><div class="r">Solana RPC &middot; webhooks</div><div class="t">Primary</div></div>
-        <div class="src"><div class="n"><span class="ok"></span>Bitquery</div><div class="r">Real-time WebSocket feeds</div><div class="t">Streaming</div></div>
-        <div class="src"><div class="n"><span class="ok"></span>Vybe Network</div><div class="r">Solana smart-money labels</div><div class="t">Enrichment</div></div>
-        <div class="src"><div class="n"><span class="ok"></span>Smart Money API</div><div class="r">Whale signals &middot; regime analysis</div><div class="t">Signals</div></div>
+        <div class="src"><div class="n"><span class="ok"></span>EVM Wallet Data</div><div class="r">Wallet balances &middot; DEX trades &middot; PnL</div><div class="t">Primary</div></div>
+        <div class="src"><div class="n"><span class="ok"></span>Solana Infrastructure</div><div class="r">RPC &middot; webhooks &middot; streaming</div><div class="t">Primary</div></div>
+        <div class="src"><div class="n"><span class="ok"></span>Real-time Feeds</div><div class="r">On-chain WebSocket streams</div><div class="t">Streaming</div></div>
+        <div class="src"><div class="n"><span class="ok"></span>Smart-money Labels</div><div class="r">Wallet-level enrichment</div><div class="t">Enrichment</div></div>
+        <div class="src"><div class="n"><span class="ok"></span>Signal Models</div><div class="r">Whale signals &middot; regime analysis</div><div class="t">Signals</div></div>
         <div class="src"><div class="n"><span class="ok"></span>X / Social</div><div class="r">Handle-level stream monitoring</div><div class="t">Sentiment</div></div>
       </div>
     </div>
@@ -677,7 +715,7 @@ button{font-family:inherit;cursor:pointer;}
     <div class="faq-list rv d1">
       <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Is ChainQuant non-custodial?</span><span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button><div class="faq-a"><div class="faq-a-in">Yes. ChainQuant is entirely non-custodial. We only read public on-chain data &mdash; we never request private keys, seed phrases, or custody of any assets. Connect your wallet in read-only mode for personalized tracking.</div></div></div>
       <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>How realtime is the data?</span><span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button><div class="faq-a"><div class="faq-a-in">Pro and Elite subscribers receive low-latency data via dedicated node infrastructure. Core (free) users receive data with a 15-minute delay. Whale alerts and AI signals are pushed instantly to connected Discord channels.</div></div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>What data sources power ChainQuant?</span><span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button><div class="faq-a"><div class="faq-a-in">ChainQuant runs on a fully licensed, commercial-compliant data stack &mdash; Moralis for EVM wallet and DEX data, Helius for Solana, and Bitquery for real-time feeds, enriched with Vybe Network labels and our own signal models. Wallet scoring is computed by a proprietary seven-factor engine we own outright, not licensed labels. Our pipeline processes over $180B in daily transaction volume.</div></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>What data sources power ChainQuant?</span><span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button><div class="faq-a"><div class="faq-a-in">ChainQuant runs on a fully licensed, commercial-compliant data stack &mdash; primary providers for EVM wallet and DEX data, dedicated Solana infrastructure, and real-time streaming feeds, enriched with smart-money labels and our own signal models. Wallet scoring is computed by a proprietary seven-factor engine we own outright, not licensed labels. Our pipeline processes over $180B in daily transaction volume.</div></div></div>
       <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Can I connect my own wallets?</span><span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button><div class="faq-a"><div class="faq-a-in">Yes. Connect any Ethereum, Solana, or EVM-compatible wallet via MetaMask, Phantom, or Coinbase Wallet in view-only mode. Your activity will be overlaid with smart money context, AI signals, and clustering analysis.</div></div></div>
     </div>
   </div>
