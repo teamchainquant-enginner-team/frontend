@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request a Pro Demo — ChainQuant</title>
+<meta name="description" content="Request a guided walkthrough of ChainQuant Pro — institutional on-chain intelligence for trading firms, funds and desks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080A0E; --panel:#0C0F15; --panel-2:#11151D;
+  --line:rgba(255,255,255,0.07); --line-2:rgba(255,255,255,0.12); --line-3:rgba(255,255,255,0.20);
+  --ink:#F2F5F9; --ink-2:#9BA6B4; --ink-3:#5C6675; --ink-4:#39414D;
+  --blue:#1AA3FF; --blue-2:#5BC0FF; --blue-deep:#0A7FE0; --blue-dim:rgba(26,163,255,0.12);
+  --up:#34C77B; --down:#E25555; --err:#E25555;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono','SF Mono',Menlo,monospace;
+  --max:1000px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;min-height:100vh;display:flex;flex-direction:column;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(1100px 620px at 50% -8%,rgba(26,163,255,0.10),transparent 60%),radial-gradient(760px 520px at 92% 108%,rgba(26,163,255,0.06),transparent 62%);}
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px;}
+
+/* top bar */
+.top{position:relative;z-index:2;max-width:var(--max);width:100%;margin:0 auto;padding:22px 28px;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo svg{width:26px;height:26px;display:block;}
+.logo-word{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
+.logo-word span{color:var(--blue);}
+.back{font-size:13px;color:var(--ink-2);display:inline-flex;align-items:center;gap:7px;transition:color .16s;}
+.back:hover{color:var(--ink);}
+.back svg{width:13px;height:13px;}
+
+/* shell */
+.wrap{position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:center;padding:20px 28px 56px;}
+.card{width:100%;max-width:var(--max);background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent 40%),var(--panel);border:1px solid var(--line-2);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:0.82fr 1fr;box-shadow:0 40px 120px -50px rgba(0,0,0,0.9),0 0 0 1px rgba(26,163,255,0.04);}
+
+/* left pitch panel */
+.pitch{position:relative;padding:40px 38px;background:linear-gradient(180deg,rgba(26,163,255,0.10),rgba(26,163,255,0.015) 42%,transparent),var(--panel-2);border-right:1px solid var(--line);display:flex;flex-direction:column;}
+.eyebrow{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--blue);display:inline-flex;align-items:center;gap:9px;}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 3px rgba(26,163,255,0.16);}
+.pitch h1{font-size:29px;font-weight:600;letter-spacing:-0.03em;line-height:1.1;margin-top:22px;}
+.pitch .sub{font-size:14.5px;color:var(--ink-2);line-height:1.6;margin-top:15px;max-width:38ch;}
+.seen{list-style:none;margin-top:28px;padding-top:26px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:13px;}
+.seen .lab{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:3px;}
+.seen li{position:relative;padding-left:20px;font-size:13.5px;color:var(--ink-2);line-height:1.4;}
+.seen li:not(.lab)::before{content:'';position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:1.5px;background:var(--blue);}
+.trust{margin-top:auto;padding-top:28px;display:flex;flex-wrap:wrap;gap:9px 16px;}
+.agenda{margin-top:26px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;}
+.agenda .lab{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);}
+.agenda .dur{font-size:14.5px;font-weight:600;color:var(--ink);margin-top:8px;letter-spacing:-0.01em;}
+.ag-rows{margin-top:13px;display:flex;flex-direction:column;gap:9px;}
+.ag{display:flex;gap:13px;font-size:12.5px;color:var(--ink-2);line-height:1.4;}
+.ag .tm{font-family:var(--mono);font-size:11px;color:var(--blue);flex-shrink:0;width:42px;}
+.agenda .tail{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);font-style:italic;}
+.trust span{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--ink-3);}
+.trust svg{width:12px;height:12px;color:var(--blue);flex-shrink:0;}
+
+/* right form panel */
+.form-panel{padding:38px 40px;position:relative;}
+.form-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px;}
+.form-head h2{font-size:19px;font-weight:600;letter-spacing:-0.02em;}
+.secure{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);display:inline-flex;align-items:center;gap:6px;}
+.secure svg{width:12px;height:12px;color:var(--ink-3);}
+
+form{display:flex;flex-direction:column;gap:16px;}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0;}
+.field label{font-size:12.5px;font-weight:500;color:var(--ink-2);letter-spacing:-0.005em;}
+.field label .req{color:var(--blue);margin-left:2px;}
+.field .opt{color:var(--ink-4);font-weight:400;font-size:11px;margin-left:4px;letter-spacing:0.02em;}
+.control{width:100%;height:44px;background:var(--bg);border:1px solid var(--line-2);border-radius:9px;color:var(--ink);font-family:var(--sans);font-size:14px;padding:0 13px;transition:border-color .16s,background .16s,box-shadow .16s;}
+textarea.control{height:auto;min-height:82px;padding:11px 13px;line-height:1.5;resize:vertical;}
+select.control{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'><path d='M2.5 4.5L6 8l3.5-3.5' stroke='%235C6675' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;}
+select.control:invalid{color:var(--ink-3);}
+.control::placeholder{color:var(--ink-4);}
+.control:hover{border-color:var(--line-3);}
+.control:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,163,255,0.14);background:#090c12;}
+.field.bad .control{border-color:var(--err);box-shadow:0 0 0 3px rgba(226,85,85,0.12);}
+.err-msg{display:none;font-size:11.5px;color:var(--err);}
+.field.bad .err-msg{display:block;}
+
+.consent{display:flex;align-items:flex-start;gap:11px;margin-top:2px;}
+.consent input{appearance:none;-webkit-appearance:none;flex-shrink:0;width:18px;height:18px;margin-top:1px;border:1px solid var(--line-3);border-radius:5px;background:var(--bg);cursor:pointer;transition:background .15s,border-color .15s;position:relative;}
+.consent input:checked{background:var(--blue);border-color:var(--blue);}
+.consent input:checked::after{content:'';position:absolute;left:5px;top:1.5px;width:5px;height:9px;border:solid #04121F;border-width:0 2px 2px 0;transform:rotate(45deg);}
+.consent label{font-size:12px;color:var(--ink-3);line-height:1.5;cursor:pointer;}
+.consent a{color:var(--ink-2);text-decoration:underline;text-underline-offset:2px;}
+.consent.bad label{color:var(--err);}
+
+.status{display:none;font-size:12.5px;color:var(--err);background:rgba(226,85,85,0.08);border:1px solid rgba(226,85,85,0.28);border-radius:9px;padding:10px 13px;}
+.status.show{display:block;}
+
+.actions{display:flex;align-items:center;gap:16px;margin-top:6px;flex-wrap:wrap;}
+.submit{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:48px;padding:0 26px;border:none;border-radius:9px;background:var(--blue);color:#04121F;font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:-0.01em;cursor:pointer;transition:background .18s,box-shadow .18s,transform .18s;box-shadow:0 12px 34px -12px rgba(26,163,255,0.7);}
+.submit:hover:not(:disabled){background:var(--blue-2);transform:translateY(-1px);box-shadow:0 16px 40px -12px rgba(26,163,255,0.75);}
+.submit:disabled{opacity:0.65;cursor:default;}
+.submit .arr{transition:transform .18s;}
+.submit:hover:not(:disabled) .arr{transform:translateX(3px);}
+.submit .spin{width:15px;height:15px;border:2px solid rgba(4,18,31,0.35);border-top-color:#04121F;border-radius:50%;animation:sp .7s linear infinite;display:none;}
+.submit.loading .spin{display:inline-block;}
+.submit.loading .arr{display:none;}
+.alt-mail{font-size:12.5px;color:var(--ink-3);}
+.alt-mail a{color:var(--ink-2);transition:color .16s;}
+.alt-mail a:hover{color:var(--blue);}
+
+/* honeypot */
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+
+/* success */
+.done{display:none;flex-direction:column;align-items:flex-start;padding:6px 0;min-height:360px;justify-content:center;}
+.done.show{display:flex;}
+.done.show ~ *{display:none;}
+.done .badge{width:52px;height:52px;border-radius:14px;background:var(--blue-dim);border:1px solid rgba(26,163,255,0.3);display:flex;align-items:center;justify-content:center;color:var(--blue);}
+.done h2{font-size:22px;font-weight:600;letter-spacing:-0.02em;margin-top:22px;}
+.done p{font-size:14px;color:var(--ink-2);line-height:1.6;margin-top:12px;max-width:42ch;}
+.done .again{margin-top:24px;font-size:13px;color:var(--ink-3);}
+.done .again a{color:var(--blue);}
+
+@media (max-width:860px){
+  .card{grid-template-columns:1fr;max-width:520px;}
+  .pitch{border-right:none;border-bottom:1px solid var(--line);padding:32px 28px;}
+  .trust{margin-top:24px;}
+  .form-panel{padding:30px 28px 34px;}
+}
+@media (max-width:520px){
+  .top{padding:18px 20px;}
+  .wrap{padding:8px 16px 40px;}
+  .row{grid-template-columns:1fr;}
+  .pitch h1{font-size:25px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:0.001ms!important;transition-duration:0.001ms!important;}
+}
+@keyframes sp{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="logo" href="index.html" aria-label="ChainQuant home">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#1AA3FF" stroke-width="2" stroke-dasharray="41 13" stroke-linecap="round"/><circle cx="12" cy="12" r="3" fill="#1AA3FF"/></svg>
+    <span class="logo-word">Chain<span>Quant</span></span>
+  </a>
+  <a class="back" href="index.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to ChainQuant</a>
+</header>
+
+<main class="wrap">
+  <div class="card">
+
+    <!-- LEFT: pitch -->
+    <aside class="pitch">
+      <div class="eyebrow"><span class="dot"></span> ChainQuant Pro</div>
+      <h1>See the terminal institutions run on.</h1>
+      <p class="sub">A live, guided walkthrough for trading firms, funds, research teams, and professional desks&mdash;tailored to your team&rsquo;s actual workflows.</p>
+      <ul class="seen">
+        <li class="lab">In your demo</li>
+        <li>Brief discovery of your firm, team, and current research workflow</li>
+        <li>Live walkthrough tailored to the markets, wallets, and signals you monitor</li>
+        <li>Review of alerts, reporting, team access, integrations, and admin controls</li>
+        <li>Package recommendation, pricing, implementation timeline, and next steps</li>
+      </ul>
+      <div class="agenda">
+        <div class="lab">What to expect</div>
+        <div class="dur">30-minute working session</div>
+        <div class="ag-rows">
+          <div class="ag"><span class="tm">5 min</span><span>Understand your operation and current tools</span></div>
+          <div class="ag"><span class="tm">15 min</span><span>Personalized ChainQuant terminal walkthrough</span></div>
+          <div class="ag"><span class="tm">5 min</span><span>Discuss team access, workflows, and integrations</span></div>
+          <div class="ag"><span class="tm">5 min</span><span>Pricing, onboarding, and next steps</span></div>
+        </div>
+        <div class="tail">No generic presentation. Every demo is tailored to your desk.</div>
+      </div>
+      <div class="trust">
+        <span><svg viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Read-only &amp; non-custodial</span>
+        <span><svg viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> No keys or signatures</span>
+        <span><svg viewBox="0 0 13 13" fill="none"><path d="M2.5 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Compliant data stack</span>
+      </div>
+    </aside>
+
+    <!-- RIGHT: form -->
+    <section class="form-panel">
+      <!-- success state -->
+      <div class="done" id="done" aria-live="polite">
+        <div class="badge"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M6 13.5l4.5 4.5L20 8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h2 id="doneTitle">Request received.</h2>
+        <p id="doneMsg">Thanks — our team will reach out to set up your ChainQuant Pro walkthrough.</p>
+        <div class="again"><a href="#" id="again">Submit another request</a></div>
+      </div>
+
+      <div class="form-head">
+        <h2>Request a Pro demo</h2>
+        <span class="secure"><svg viewBox="0 0 14 14" fill="none"><rect x="3" y="6.5" width="8" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M4.8 6.5V5a2.2 2.2 0 014.4 0v1.5" stroke="currentColor" stroke-width="1.2"/></svg> Secure intake</span>
+      </div>
+
+      <form id="leadForm" novalidate autocomplete="on">
+        <div class="row">
+          <div class="field" data-field>
+            <label for="firstName">First name<span class="req">*</span></label>
+            <input class="control" id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="Jordan" required>
+            <span class="err-msg">Enter your first name.</span>
+          </div>
+          <div class="field" data-field>
+            <label for="lastName">Last name<span class="req">*</span></label>
+            <input class="control" id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Reyes" required>
+            <span class="err-msg">Enter your last name.</span>
+          </div>
+        </div>
+
+        <div class="field" data-field>
+          <label for="email">Work email<span class="req">*</span></label>
+          <input class="control" id="email" name="email" type="email" autocomplete="email" placeholder="you@yourfirm.com" required>
+          <span class="err-msg" data-default="Enter a valid email.">Enter a valid email.</span>
+        </div>
+
+        <div class="row">
+          <div class="field" data-field>
+            <label for="phone">Phone<span class="req">*</span></label>
+            <input class="control" id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+1 555 000 0000" required>
+            <span class="err-msg">Enter a valid phone number.</span>
+          </div>
+          <div class="field" data-field data-optional>
+            <label for="firm">Firm / company<span class="opt">optional</span></label>
+            <input class="control" id="firm" name="firm" type="text" autocomplete="organization" placeholder="Firm name">
+            <span class="err-msg"></span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field" data-field data-optional>
+            <label for="firmType">Firm type<span class="opt">optional</span></label>
+            <select class="control" id="firmType" name="firmType">
+              <option value="" disabled selected>Select…</option>
+              <option>Hedge fund</option>
+              <option>Proprietary trading firm</option>
+              <option>Asset manager</option>
+              <option>Venture / crypto fund</option>
+              <option>Market maker</option>
+              <option>Family office</option>
+              <option>Bank / broker-dealer</option>
+              <option>Other</option>
+            </select>
+            <span class="err-msg"></span>
+          </div>
+          <div class="field" data-field data-optional>
+            <label for="team">Seats / team size<span class="opt">optional</span></label>
+            <select class="control" id="team" name="team">
+              <option value="" disabled selected>Select…</option>
+              <option>Just me</option>
+              <option>2–5</option>
+              <option>6–15</option>
+              <option>16–50</option>
+              <option>50+</option>
+            </select>
+            <span class="err-msg"></span>
+          </div>
+        </div>
+
+        <!-- honeypot: leave empty -->
+        <div class="hp" aria-hidden="true"><label>Company website<input type="text" name="company_url" tabindex="-1" autocomplete="off"></label></div>
+
+        <div class="consent" data-field data-consent>
+          <input id="consent" name="consent" type="checkbox" required>
+          <label for="consent">I agree to be contacted by ChainQuant about a demo and understand ChainQuant only reads public blockchain data — it never requests keys, seed phrases or custody. <a href="chainquant_legal.html" target="_blank" rel="noopener">Privacy</a></label>
+        </div>
+
+        <div class="status" id="status" role="alert"></div>
+
+        <div class="actions">
+          <button class="submit" id="submitBtn" type="submit">
+            <span class="spin" aria-hidden="true"></span>
+            <span class="txt">Request demo</span>
+            <svg class="arr" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M3 7.5h8M7.5 4l3.5 3.5L7.5 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <span class="alt-mail">Prefer email? <a href="mailto:support@chainquant.net?subject=ChainQuant%20Pro%20Demo%20Request">support@chainquant.net</a></span>
+        </div>
+      </form>
+    </section>
+
+  </div>
+</main>
+
+<script>
+/* =====================================================================
+   LEAD DELIVERY CONFIG
+   ---------------------------------------------------------------------
+   Wired to Supabase → public.demo_leads (RLS: anon may INSERT only).
+   The anon key below is a public, publishable key — safe to ship in the
+   browser; Row Level Security prevents anyone from reading leads back.
+   To read leads, query the table with the service role (backend/cron)
+   or in the Supabase dashboard.
+
+   If the POST fails, the visitor sees an error and the "Prefer email?"
+   link to `fallbackEmail`, so a lead is never lost.
+   ===================================================================== */
+const CONFIG = {
+  endpoint: "https://segccrrecdhzfwgptqsi.supabase.co/rest/v1/demo_leads",
+  fallbackEmail: "support@chainquant.net",
+  extraHeaders: {
+    apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlZ2NjcnJlY2RoemZ3Z3B0cXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTMzNzIsImV4cCI6MjA5NTYyOTM3Mn0.x89EROpgd3qER0QB4BmeDeXuN5dnTK_79HXH1PuWlws",
+    Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlZ2NjcnJlY2RoemZ3Z3B0cXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTMzNzIsImV4cCI6MjA5NTYyOTM3Mn0.x89EROpgd3qER0QB4BmeDeXuN5dnTK_79HXH1PuWlws",
+    Prefer: "return=minimal"
+  }
+};
+
+const FREE_EMAIL = new Set(["gmail.com","googlemail.com","yahoo.com","ymail.com","hotmail.com","outlook.com","live.com","msn.com","aol.com","icloud.com","me.com","mac.com","proton.me","protonmail.com","gmx.com","mail.com","zoho.com","yandex.com"]);
+
+const form = document.getElementById("leadForm");
+const statusEl = document.getElementById("status");
+const btn = document.getElementById("submitBtn");
+const done = document.getElementById("done");
+
+function fieldOf(el){ return el.closest("[data-field]"); }
+function setBad(wrap, msg){
+  wrap.classList.add("bad");
+  const e = wrap.querySelector(".err-msg");
+  if(e && msg) e.textContent = msg;
+}
+function clearBad(wrap){
+  wrap.classList.remove("bad");
+  const e = wrap.querySelector(".err-msg");
+  if(e && e.dataset.default) e.textContent = e.dataset.default;
+}
+// clear a field's error as the user fixes it
+form.querySelectorAll(".control, #consent").forEach(el=>{
+  const ev = el.type === "checkbox" || el.tagName === "SELECT" ? "change" : "input";
+  el.addEventListener(ev, ()=>{ const w = fieldOf(el); if(w) clearBad(w); statusEl.classList.remove("show"); });
+});
+
+function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+function validPhone(v){ return (v.replace(/[^\d]/g,"").length >= 7); }
+
+function validate(){
+  let firstBad = null;
+  // required text/select/tel
+  form.querySelectorAll("[data-field]:not([data-optional]):not([data-consent]) .control").forEach(el=>{
+    const w = fieldOf(el);
+    const v = (el.value || "").trim();
+    if(!v){ setBad(w); if(!firstBad) firstBad = el; return; }
+    if(el.id === "email"){
+      if(!validEmail(v)){ setBad(w, "Enter a valid email."); if(!firstBad) firstBad = el; return; }
+      const dom = v.split("@")[1].toLowerCase();
+      if(FREE_EMAIL.has(dom)){ setBad(w, "Please use your work email."); if(!firstBad) firstBad = el; return; }
+    }
+    if(el.id === "phone" && !validPhone(v)){ setBad(w, "Enter a valid phone number."); if(!firstBad) firstBad = el; return; }
+    clearBad(w);
+  });
+  // consent
+  const consent = document.getElementById("consent");
+  const cwrap = consent.closest("[data-consent]");
+  if(!consent.checked){ cwrap.classList.add("bad"); if(!firstBad) firstBad = consent; }
+  else cwrap.classList.remove("bad");
+
+  if(firstBad){ firstBad.focus(); }
+  return !firstBad;
+}
+
+function collect(){
+  const g = id => (document.getElementById(id)?.value || "").trim();
+  return {
+    first_name:   g("firstName"),
+    last_name:    g("lastName"),
+    email:        g("email"),
+    phone:        g("phone"),
+    firm:         g("firm") || null,
+    firm_type:    g("firmType") || null,
+    team:         g("team") || null,
+    consent:      document.getElementById("consent").checked,
+    source:       "request_demo_page",
+    submitted_at: new Date().toISOString()
+  };
+}
+
+function mailtoFallback(o){
+  const lines = [
+    "First name: "+o.first_name,
+    "Last name: "+o.last_name,
+    "Work email: "+o.email,
+    "Phone: "+o.phone,
+    "Firm: "+(o.firm||"—"),
+    "Firm type: "+(o.firm_type||"—"),
+    "Seats / team: "+(o.team||"—")
+  ].join("\n");
+  const subject = "ChainQuant Pro Demo Request — "+(o.firm||o.last_name||"");
+  window.location.href = "mailto:"+CONFIG.fallbackEmail+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(lines);
+}
+
+function showDone(mode){
+  if(mode === "mailto"){
+    document.getElementById("doneTitle").textContent = "Almost there — send the email.";
+    document.getElementById("doneMsg").textContent = "We've opened a pre-filled message to our team. Hit send and we'll follow up to schedule your walkthrough.";
+  }
+  done.classList.add("show");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+form.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  statusEl.classList.remove("show");
+
+  // honeypot — silently accept & drop bots
+  if(form.company_url && form.company_url.value){ showDone("posted"); return; }
+
+  if(!validate()) return;
+  const payload = collect();
+
+  // No endpoint configured → email fallback (works immediately)
+  if(!CONFIG.endpoint){ mailtoFallback(payload); showDone("mailto"); return; }
+
+  // POST to configured endpoint
+  btn.classList.add("loading"); btn.disabled = true; btn.querySelector(".txt").textContent = "Sending";
+  try{
+    const res = await fetch(CONFIG.endpoint, {
+      method: "POST",
+      headers: Object.assign({ "Content-Type":"application/json" }, CONFIG.extraHeaders),
+      body: JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error("Request failed ("+res.status+")");
+    showDone("posted");
+  }catch(err){
+    statusEl.textContent = "We couldn't send that just now. Please try again, or email "+CONFIG.fallbackEmail+".";
+    statusEl.classList.add("show");
+  }finally{
+    btn.classList.remove("loading"); btn.disabled = false; btn.querySelector(".txt").textContent = "Request demo";
+  }
+});
+
+document.getElementById("again").addEventListener("click",(e)=>{
+  e.preventDefault();
+  form.reset();
+  done.classList.remove("show");
+  document.getElementById("firstName").focus();
+});
+</script>
+</body>
+</html>
